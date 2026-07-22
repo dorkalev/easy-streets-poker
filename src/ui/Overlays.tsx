@@ -5,7 +5,6 @@ import {
   dismissNewRule,
   dismissCoach,
   retryLevel,
-  nextAfterLevelEnd,
   startLevel,
 } from '../app/game'
 import { getLevel, LEVELS } from '../levels/levels'
@@ -226,13 +225,14 @@ export function LevelEndModal() {
               <button className="btn-secondary" onClick={retryLevel}>
                 {end.outcome === 'won' ? 'Replay' : 'Try again'}
               </button>
-              {end.outcome === 'won' && hasNext ? (
+              {end.outcome === 'won' && hasNext && (
                 <button className="btn-play" onClick={() => startLevel(levelNumber! + 1)}>
                   Next level →
                 </button>
-              ) : (
-                <button className="btn-play" onClick={nextAfterLevelEnd}>
-                  Level map
+              )}
+              {end.outcome === 'won' && !hasNext && (
+                <button className="btn-play" onClick={() => startLevel(levelNumber!)}>
+                  Champion! Run it back 🏆
                 </button>
               )}
             </div>

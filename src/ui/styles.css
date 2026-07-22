@@ -78,142 +78,135 @@ button {
 }
 
 /* ============================================================
-   LEVEL MAP
+   PROGRESS PANE — the linear journey strip pinned on top
    ============================================================ */
 
-.map {
-  position: relative;
-  height: 100%;
-  overflow-y: auto;
-  padding: 48px 24px 80px;
-  z-index: 1;
-}
-
-.map-inner { max-width: 880px; margin: 0 auto; }
-
-.map-header { text-align: center; margin-bottom: 40px; }
-
-.map-kicker {
-  font-size: 13px;
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-  color: var(--brass);
-  margin-bottom: 10px;
-}
-
-.map-title {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: clamp(38px, 6vw, 58px);
-  margin: 0;
-  color: var(--cream);
-  text-shadow: 0 3px 0 rgba(0, 0, 0, 0.35);
-}
-
-.map-title em {
-  font-style: italic;
-  color: var(--brass-bright);
-}
-
-.map-sub {
-  margin-top: 10px;
-  color: #bfd6c8;
-  font-size: 16px;
-}
-
-.act {
-  margin: 36px 0 18px;
+.progress-pane {
   display: flex;
   align-items: center;
-  gap: 14px;
-}
-
-.act-num {
-  font-family: var(--font-display);
-  font-size: 15px;
-  color: var(--brass);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-.act-line { flex: 1; height: 1px; background: linear-gradient(90deg, var(--brass), transparent); opacity: 0.5; }
-
-.levels-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 14px;
-}
-
-.level-card {
+  justify-content: center;
+  gap: 7px;
+  flex-wrap: wrap;
+  padding: 10px 16px 2px;
+  z-index: 7;
   position: relative;
-  text-align: left;
-  background: linear-gradient(160deg, #124a35, #0c3a29);
-  border: 1px solid rgba(217, 164, 65, 0.25);
-  border-radius: 16px;
-  padding: 16px 18px;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s;
-  overflow: hidden;
 }
 
-.level-card:not(.locked):hover {
-  transform: translateY(-3px) rotate(-0.4deg);
-  box-shadow: var(--shadow-soft);
-  border-color: var(--brass);
+.lnode {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+  font-size: 13px;
+  color: var(--cream-dim);
+  background: rgba(0, 0, 0, 0.35);
+  border: 1.5px solid rgba(217, 164, 65, 0.35);
+  transition: transform 0.12s ease, border-color 0.12s, background 0.12s;
 }
 
-.level-card.locked { opacity: 0.45; cursor: not-allowed; filter: saturate(0.4); }
+.lnode:not(.locked):hover { transform: scale(1.15); border-color: var(--brass-bright); }
 
-.level-card.done { border-color: rgba(217, 164, 65, 0.6); }
+.lnode.done {
+  background: linear-gradient(180deg, var(--brass-bright), var(--brass));
+  color: var(--ink);
+  border-color: var(--brass-bright);
+}
 
-.level-no {
-  font-family: var(--font-display);
+.lnode.current {
+  background: linear-gradient(180deg, #4da375, #337653);
+  color: #fff;
+  border-color: var(--gold-glow);
+  box-shadow: 0 0 0 3px rgba(255, 217, 122, 0.3), 0 0 16px rgba(255, 217, 122, 0.45);
+  animation: breathe 1.6s ease-in-out infinite;
+}
+
+.lnode.locked {
+  opacity: 0.35;
+  cursor: not-allowed;
+  filter: saturate(0.3);
+}
+
+.lnode-num { line-height: 1; }
+
+.lnode-stars {
+  position: absolute;
+  bottom: -9px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--gold-glow);
+  line-height: 1;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+.act-tick {
   font-size: 13px;
   color: var(--brass);
-  letter-spacing: 0.12em;
+  opacity: 0.8;
+  margin: 0 3px;
+  position: relative;
 }
 
-.level-name {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 22px;
-  margin: 2px 0 4px;
-  color: var(--cream);
-}
-
-.level-sub { font-size: 13px; color: #a8c4b4; line-height: 1.35; min-height: 34px; }
-
-.level-newrule {
-  margin-top: 10px;
-  font-size: 12px;
-  color: var(--gold-glow);
-  background: rgba(217, 164, 65, 0.12);
-  border-left: 3px solid var(--brass);
-  padding: 6px 8px;
-  border-radius: 0 8px 8px 0;
-  line-height: 1.35;
-}
-
-.level-stars { position: absolute; top: 14px; right: 14px; font-size: 13px; letter-spacing: 2px; }
 .star-on { color: var(--brass-bright); }
 .star-off { color: rgba(255, 255, 255, 0.2); }
 
-.level-lock { position: absolute; top: 12px; right: 14px; font-size: 18px; }
-
-/* codex strip */
-.codex {
-  margin-top: 48px;
-  background: rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(217, 164, 65, 0.25);
-  border-radius: 16px;
-  padding: 18px 20px;
+/* settings cluster + codex popover */
+.settings-cluster {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  position: relative;
 }
 
-.codex h3 {
+.mini-btn {
+  position: relative;
+  font-size: 15px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: grid;
+  place-items: center;
+  transition: border-color 0.15s;
+}
+
+.mini-btn:hover { border-color: var(--brass); }
+
+.mini-tag {
+  position: absolute;
+  bottom: -4px;
+  right: -6px;
+  font-size: 9px;
+  font-weight: 900;
+  color: var(--ink);
+  background: var(--brass-bright);
+  border-radius: 999px;
+  padding: 1px 4px;
+}
+
+.codex-pop {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 300px;
+  background: linear-gradient(170deg, #0f4030, #0a3023);
+  border: 1px solid rgba(217, 164, 65, 0.45);
+  border-radius: 16px;
+  padding: 14px 16px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.6);
+  z-index: 30;
+}
+
+.codex-pop h3 {
   font-family: var(--font-display);
-  margin: 0 0 12px;
+  margin: 0 0 10px;
   color: var(--brass-bright);
-  font-size: 17px;
+  font-size: 15px;
 }
 
 .codex-row { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -231,24 +224,6 @@ button {
   color: var(--gold-glow);
   background: rgba(217, 164, 65, 0.15);
 }
-
-.map-footer {
-  margin-top: 28px;
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-}
-
-.map-footer button {
-  font-size: 13px;
-  color: #a8c4b4;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  padding: 8px 16px;
-  border-radius: 999px;
-  transition: all 0.15s;
-}
-
-.map-footer button:hover { color: var(--cream); border-color: var(--brass); }
 
 /* ============================================================
    GAME SCREEN

@@ -77,7 +77,6 @@ export interface LevelEndView {
 }
 
 export interface GameView {
-  screen: 'map' | 'game'
   levelNumber: number | null
   seats: SeatView[]
   community: Card[]
@@ -111,7 +110,6 @@ const EMPTY_RUN: RunView = {
 }
 
 const INITIAL_VIEW: GameView = {
-  screen: 'map',
   levelNumber: null,
   seats: [],
   community: [],
@@ -226,13 +224,6 @@ function clearTimers(): void {
 // Public API (called from UI)
 // ---------------------------------------------------------------------------
 
-export function goToMap(): void {
-  clearTimers()
-  orc.level = null
-  orc.engine = null
-  useGame.setState({ ...INITIAL_VIEW, screen: 'map' })
-}
-
 export function startLevel(levelNumber: number): void {
   clearTimers()
   const level = getLevel(levelNumber)
@@ -282,7 +273,6 @@ export function startLevel(levelNumber: number): void {
 
   useGame.setState({
     ...INITIAL_VIEW,
-    screen: 'game',
     levelNumber,
     seats,
     newRuleOpen: true,
@@ -334,10 +324,6 @@ export function dismissCoach(): void {
 export function dismissPredictionResult(): void {
   set({ predictionResult: null })
   wait(80, pump)
-}
-
-export function nextAfterLevelEnd(): void {
-  goToMap()
 }
 
 export function retryLevel(): void {

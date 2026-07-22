@@ -1,5 +1,10 @@
-import { useGame, goToMap } from '../app/game'
-import { getLevel } from '../levels/levels'
+import { Fragment, useState } from 'react'
+import { useGame, startLevel } from '../app/game'
+import { useProgress, isLevelUnlocked } from '../app/progress'
+import { getLevel, LEVELS } from '../levels/levels'
+import { CATEGORY_LABELS } from '../engine/describe'
+import { HAND_CATEGORY_ORDER } from '../engine/types'
+import { sfx, setSoundEnabled } from '../app/sfx'
 import { Table } from './Table'
 import { ActionBar } from './ActionBar'
 import {
@@ -12,6 +17,120 @@ import {
   StrengthMeter,
   RankRibbon,
 } from './Overlays'
+
+/** The linear journey strip: all 17 levels, always visible on top. */
+function ProgressPane() {
+  const progress = useProgress()
+  const current = useGame((g) => g.levelNumber)
+
+  return (
+    <div className="progress-pane">
+      {LEVELS.map((level) => {
+        const n = level.levelNumber
+        const result = progress.levels[n]
+        const unlocked = isLevelUnlocked(n, progress.levels)
+        const isCurrent = n === current
+        const stars = result?.stars ?? 0
+        const firstOfAct = LEVELS.find((l) => l.act === level.act)?.levelNumber === n
+        const tip = unlocked
+          ? `LEVEL ${n}: ${level.title} — ${level.newRules[0]}${stars ? ` (${'★'.repeat(stars)})` : ''}${isCurrent ? ' · You are here!' : ' · Click to play'}`
+          : `LEVEL ${n}: ${level.title} — locked. Finish level ${n - 1} to open it.`
+        return (
+          <Fragment key={n}>
+            {firstOfAct && (
+              <span className="act-tick tip tip-down" data-tip={`Act ${level.act} — ${level.actName}`}>
+                {level.act === 1 ? '♠' : level.act === 2 ? '♥' : level.act === 3 ? '♦' : level.act === 4 ? '♣' : '★'}
+              </span>
+            )}
+            <button
+              className={[
+                'lnode',
+                result?.completed ? 'done' : '',
+                isCurrent ? 'current' : '',
+                unlocked ? '' : 'locked',
+              ]
+                .filter(Boolean)
+                .join(' ')}
+              data-tip={tip}
+              onClick={() => {
+                if (!unlocked || isCurrent) return
+                sfx.click()
+                startLevel(n)
+              }}
+            >
+              <span className="lnode-num">{result?.completed && !isCurrent ? '✓' : n}</span>
+              {stars > 0 && <span className="lnode-stars">{'•'.repeat(stars)}</span>}
+            </button>
+          </Fragment>
+        )
+      })}
+    </div>
+  )
+}
+
+function SettingsCluster() {
+  const progress = useProgress()
+  const [codexOpen, setCodexOpen] = useState(false)
+
+  return (
+    <div className="settings-cluster">
+      <button
+        className="mini-btn tip tip-down"
+        data-tip="THE HAND CODEX: every poker hand you've ever made lights up here. Fill all nine!"
+        onClick={() => setCodexOpen((o) => !o)}
+      >
+        📖
+      </button>
+      <button
+        className="mini-btn tip tip-down"
+        data-tip={progress.soundOn ? 'Sound is ON — click to mute.' : 'Sound is OFF — click to unmute.'}
+        onClick={() => {
+          const on = !progress.soundOn
+          progress.setSoundOn(on)
+          setSoundEnabled(on)
+          if (on) sfx.click()
+        }}
+      >
+        {progress.soundOn ? '🔊' : '🔇'}
+      </button>
+      <button
+        className="mini-btn tip tip-down"
+        data-tip={`Game speed ×${progress.speed} — click to cycle (×1 → ×1.5 → ×2). Speeds up dealing and bot thinking.`}
+        onClick={() => {
+          progress.setSpeed(progress.speed === 1 ? 1.5 : progress.speed === 1.5 ? 2 : 1)
+          sfx.click()
+        }}
+      >
+        ⏩<span className="mini-tag">×{progress.speed}</span>
+      </button>
+      <button
+        className="mini-btn tip tip-down"
+        data-tip="Reset ALL progress and start the school from scratch."
+        onClick={() => {
+          if (confirm('Reset ALL progress?')) {
+            progress.resetAll()
+            startLevel(1)
+          }
+        }}
+      >
+        ♻︎
+      </button>
+      {codexOpen && (
+        <div className="codex-pop">
+          <h3>📖 Hand Codex</h3>
+          <div className="codex-row">
+            {HAND_CATEGORY_ORDER.map((cat) => (
+              <span key={cat} className={`codex-slot ${progress.codexMade.includes(cat) ? 'made' : ''}`}>
+                {progress.codexMade.includes(cat) ? '✓ ' : '? '}
+                {CATEGORY_LABELS[cat]}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
 
 export function GameScreen() {
   const levelNumber = useGame((g) => g.levelNumber)
@@ -67,10 +186,8 @@ export function GameScreen() {
 
   return (
     <div className="game">
+      <ProgressPane />
       <div className="hud">
-        <button className="hud-back" onClick={goToMap} title="Back to the map">
-          ←
-        </button>
         <div className="hud-level tip tip-down" data-tip={levelTip}>
           <span className="t">{level.title}</span>
           <span className="s">
@@ -90,6 +207,7 @@ export function GameScreen() {
             🪙 <b>{hero.stack}</b>
           </div>
         )}
+        <SettingsCluster />
       </div>
 
       <Table />
