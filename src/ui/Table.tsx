@@ -3,6 +3,7 @@ import type { SeatView } from '../app/game'
 import { useGame } from '../app/game'
 import { PlayingCard } from './PlayingCard'
 import { cardId } from '../engine/deck'
+import { L } from '../i18n'
 
 interface Pos {
   x: number
@@ -41,7 +42,7 @@ export function Table() {
   return (
     <div className="table-wrap">
       <div className="table">
-        <div className="table-logo">✦ The Card Parlor ✦</div>
+        <div className="table-logo">{L.brand.tableLogo}</div>
 
         {/* committed chips, floated toward the pot */}
         {seats.map((seat) => {
@@ -89,10 +90,10 @@ export function Table() {
           <motion.div
             layout
             className={`pot tip tip-up ${pot > 0 ? '' : 'empty'}`}
-            data-tip="THE POT: every chip that gets bet lands in this pile. Win the hand, win the whole pot."
+            data-tip={L.table.potTip}
           >
-            POT {pot}
-            {carryPot > 0 && <span className="carry-tag"> (carried!)</span>}
+            {L.table.pot(pot)}
+            {carryPot > 0 && <span className="carry-tag">{L.table.carried}</span>}
           </motion.div>
         </div>
       </div>
@@ -151,10 +152,7 @@ function Seat({ seat, pos, stoplight }: { seat: SeatView; pos: Pos; stoplight: '
           {seat.emoji}
         </div>
         {seat.isButton && (
-          <div
-            className="dealer-chip tip tip-up"
-            data-tip="THE DEALER BUTTON: marks who 'deals' this hand. It moves one seat left every hand and decides the acting order."
-          >
+          <div className="dealer-chip tip tip-up" data-tip={L.table.dealerTip}>
             D
           </div>
         )}

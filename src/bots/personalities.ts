@@ -1,4 +1,5 @@
 import type { BotPersonality } from './types'
+import { L } from '../i18n'
 
 export const PERSONALITIES: Record<string, BotPersonality> = {
   callie: {
@@ -136,9 +137,21 @@ export const PERSONALITIES: Record<string, BotPersonality> = {
   },
 }
 
+// Localize the human-facing bot copy from the active locale. Numeric play
+// style stays here; words come from the i18n dictionaries.
+for (const p of Object.values(PERSONALITIES)) {
+  const copy = L.bots[p.id as keyof typeof L.bots]
+  if (!copy) continue
+  p.name = copy.name
+  p.archetype = copy.archetype
+  p.tagline = copy.tagline
+  p.howToBeat = copy.howToBeat
+  p.lines = copy.lines
+}
+
 /** Penny is the dealer/coach — a voice, not an opponent. */
 export const PENNY = {
   id: 'penny',
-  name: 'Penny the Dealer',
+  name: L.coach.name,
   emoji: '🎠',
 }

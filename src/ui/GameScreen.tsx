@@ -2,9 +2,9 @@ import { Fragment, useState } from 'react'
 import { useGame, startLevel } from '../app/game'
 import { useProgress, isLevelUnlocked } from '../app/progress'
 import { getLevel, LEVELS } from '../levels/levels'
-import { CATEGORY_LABELS } from '../engine/describe'
 import { HAND_CATEGORY_ORDER } from '../engine/types'
 import { sfx, setSoundEnabled } from '../app/sfx'
+import { L, getLocale, setLocale } from '../i18n'
 import { Table } from './Table'
 import { ActionBar } from './ActionBar'
 import {
@@ -33,12 +33,12 @@ function ProgressPane() {
         const stars = result?.stars ?? 0
         const firstOfAct = LEVELS.find((l) => l.act === level.act)?.levelNumber === n
         const tip = unlocked
-          ? `LEVEL ${n}: ${level.title} — ${level.newRules[0]}${stars ? ` (${'★'.repeat(stars)})` : ''}${isCurrent ? ' · You are here!' : ' · Click to play'}`
-          : `LEVEL ${n}: ${level.title} — locked. Finish level ${n - 1} to open it.`
+          ? L.progress.nodeTip(n, level.title, level.newRules[0], stars, isCurrent)
+          : L.progress.lockedTip(n, level.title)
         return (
           <Fragment key={n}>
             {firstOfAct && (
-              <span className="act-tick tip tip-down" data-tip={`Act ${level.act} — ${level.actName}`}>
+              <span className="act-tick tip tip-down" data-tip={L.progress.actTip(level.act, level.actName)}>
                 {level.act === 1 ? '♠' : level.act === 2 ? '♥' : level.act === 3 ? '♦' : level.act === 4 ? '♣' : '★'}
               </span>
             )}
@@ -74,16 +74,12 @@ function SettingsCluster() {
 
   return (
     <div className="settings-cluster">
-      <button
-        className="mini-btn tip tip-down"
-        data-tip="THE HAND CODEX: every poker hand you've ever made lights up here. Fill all nine!"
-        onClick={() => setCodexOpen((o) => !o)}
-      >
+      <button className="mini-btn tip tip-down" data-tip={L.settings.codexTip} onClick={() => setCodexOpen((o) => !o)}>
         📖
       </button>
       <button
         className="mini-btn tip tip-down"
-        data-tip={progress.soundOn ? 'Sound is ON — click to mute.' : 'Sound is OFF — click to unmute.'}
+        data-tip={progress.soundOn ? L.settings.soundOnTip : L.settings.soundOffTip}
         onClick={() => {
           const on = !progress.soundOn
           progress.setSoundOn(on)
@@ -95,7 +91,7 @@ function SettingsCluster() {
       </button>
       <button
         className="mini-btn tip tip-down"
-        data-tip={`Game speed ×${progress.speed} — click to cycle (×1 → ×1.5 → ×2). Speeds up dealing and bot thinking.`}
+        data-tip={L.settings.speedTip(progress.speed)}
         onClick={() => {
           progress.setSpeed(progress.speed === 1 ? 1.5 : progress.speed === 1.5 ? 2 : 1)
           sfx.click()
@@ -104,10 +100,17 @@ function SettingsCluster() {
         ⏩<span className="mini-tag">×{progress.speed}</span>
       </button>
       <button
+        className="mini-btn lang-btn tip tip-down"
+        data-tip={L.settings.langTip}
+        onClick={() => setLocale(getLocale() === 'he' ? 'en' : 'he')}
+      >
+        {L.settings.langLabel}
+      </button>
+      <button
         className="mini-btn tip tip-down"
-        data-tip="Reset ALL progress and start the school from scratch."
+        data-tip={L.settings.resetTip}
         onClick={() => {
-          if (confirm('Reset ALL progress?')) {
+          if (confirm(L.settings.resetConfirm)) {
             progress.resetAll()
             startLevel(1)
           }
@@ -117,12 +120,12 @@ function SettingsCluster() {
       </button>
       {codexOpen && (
         <div className="codex-pop">
-          <h3>📖 Hand Codex</h3>
+          <h3>{L.settings.codexTitle}</h3>
           <div className="codex-row">
             {HAND_CATEGORY_ORDER.map((cat) => (
               <span key={cat} className={`codex-slot ${progress.codexMade.includes(cat) ? 'made' : ''}`}>
                 {progress.codexMade.includes(cat) ? '✓ ' : '? '}
-                {CATEGORY_LABELS[cat]}
+                {L.hands.categories[cat]}
               </span>
             ))}
           </div>
@@ -142,58 +145,28 @@ export function GameScreen() {
   const level = getLevel(levelNumber)
   const hero = seats.find((s) => s.isHero)
 
-  const goal = (() => {
-    const w = level.winCondition
-    switch (w.type) {
-      case 'predictions':
-        return `Call ${run.predictionsCorrect}/${w.target} duels`
-      case 'hands-won':
-        return `Win ${run.handsWon}/${w.target} hands`
-      case 'chips':
-        return `Reach ${w.target} chips`
-      case 'profit':
-        return `Finish up after ${w.afterHands} hands`
-      case 'tournament':
-        return 'Last one standing wins'
-    }
-  })()
+  const w = level.winCondition
+  const goal =
+    w.type === 'predictions' ? L.hud.goal.predictions(run.predictionsCorrect, w.target)
+    : w.type === 'hands-won' ? L.hud.goal.handsWon(run.handsWon, w.target)
+    : w.type === 'chips' ? L.hud.goal.chips(w.target)
+    : w.type === 'profit' ? L.hud.goal.profit(w.afterHands)
+    : L.hud.goal.tournament()
 
-  const goalTip = (() => {
-    const w = level.winCondition
-    switch (w.type) {
-      case 'predictions':
-        return `YOUR MISSION: call the result of a duel correctly ${w.target} times — you've got ${run.predictionsCorrect} so far. Wrong guesses cost nothing; you have up to ${level.handsToComplete} duels to get there.`
-      case 'hands-won':
-        return `YOUR MISSION: win ${w.target} hands (you've won ${run.handsWon}) within ${level.handsToComplete} deals. A hand is won by having the best cards — or being the last one who didn't fold.`
-      case 'chips':
-        return `YOUR MISSION: grow your chip pile to ${w.target}. You started with ${level.rules.startingStack}. Win pots to grow it; fold bad hands so it doesn't shrink.`
-      case 'profit':
-        return `YOUR MISSION: after ${w.afterHands} hands, have MORE chips than the ${level.rules.startingStack} you started with. Folding a bad hand SAVES chips — that counts too.`
-      case 'tournament':
-        return `THIS IS A TOURNAMENT: lose all your chips and you're out. Knock everyone else out to win. If you bust, you get a free ticket to try again.`
-    }
-  })()
-
-  const questTip = `BONUS QUEST — worth an extra ★ star: “${level.quest.label}”. Totally optional; the level still completes without it. Stars just show off your mastery.`
-
-  const stackTip = `YOUR CHIPS. You started this level with ${level.rules.startingStack}. Bets are paid from here, and every pot you win lands back in it.`
-
-  const levelTip = `You're on hand ${Math.max(1, handNumber)} of this level.${
-    blinds
-      ? ` “Blinds ${blinds.small}/${blinds.big}” are forced bets two players must post before every deal — they rotate around the table.`
-      : ''
-  }`
+  const goalTip =
+    w.type === 'predictions' ? L.hud.goalTip.predictions(w.target, run.predictionsCorrect, level.handsToComplete)
+    : w.type === 'hands-won' ? L.hud.goalTip.handsWon(w.target, run.handsWon, level.handsToComplete)
+    : w.type === 'chips' ? L.hud.goalTip.chips(w.target, level.rules.startingStack)
+    : w.type === 'profit' ? L.hud.goalTip.profit(w.afterHands, level.rules.startingStack)
+    : L.hud.goalTip.tournament()
 
   return (
     <div className="game">
       <header className="topbar">
-        <div className="brand tip tip-down" data-tip={levelTip}>
-          <div className="brand-kicker">♠ ♥ The Card Parlor ♦ ♣</div>
+        <div className="brand tip tip-down" data-tip={L.hud.levelTip(Math.max(1, handNumber), blinds)}>
+          <div className="brand-kicker">{L.brand.kicker}</div>
           <div className="brand-title">{level.title}</div>
-          <div className="brand-meta">
-            Level {level.levelNumber} · Hand {Math.max(1, handNumber)}
-            {blinds ? ` · Blinds ${blinds.small}/${blinds.big}` : ''}
-          </div>
+          <div className="brand-meta">{L.hud.meta(level.levelNumber, Math.max(1, handNumber), blinds)}</div>
         </div>
         <div className="journey">
           <ProgressPane />
@@ -205,11 +178,11 @@ export function GameScreen() {
         <div className="hud-pill tip tip-down" data-tip={goalTip}>
           🎯 {goal}
         </div>
-        <div className="hud-pill quest tip tip-down" data-tip={questTip}>
+        <div className="hud-pill quest tip tip-down" data-tip={L.hud.questTip(level.quest.label)}>
           ⭐ {level.quest.label}: <b>{Math.min(run.questProgress, run.questTarget)}/{run.questTarget}</b>
         </div>
         {hero && level.rules.startingStack > 0 && (
-          <div className="hud-pill tip tip-down" data-tip={stackTip}>
+          <div className="hud-pill tip tip-down" data-tip={L.hud.stackTip(level.rules.startingStack)}>
             🪙 <b>{hero.stack}</b>
           </div>
         )}

@@ -1,5 +1,6 @@
 import type { HandCategory, RulesConfig, StreetSpec } from '../engine/types'
 import type { LevelConfig, LevelUI } from './types'
+import { L } from '../i18n'
 
 // ---------------------------------------------------------------------------
 // Shared building blocks
@@ -607,6 +608,20 @@ const L17: LevelConfig = {
 export const LEVELS: LevelConfig[] = [
   L01, L02, L03, L04, L05, L06, L07, L08, L09, L10, L11, L12, L13, L14, L15, L16, L17,
 ]
+
+// Localize all display copy from the active locale's dictionary. The literals
+// above are the English fallbacks; the i18n dictionaries are the source of
+// truth for anything the player reads.
+for (const level of LEVELS) {
+  const copy = L.levels[level.rules.id as keyof typeof L.levels]
+  if (!copy) continue
+  level.title = copy.title
+  level.subtitle = copy.subtitle
+  level.newRules = copy.newRules
+  level.intro = copy.intro
+  level.quest.label = copy.quest
+  level.actName = L.acts[level.act - 1]
+}
 
 export function getLevel(levelNumber: number): LevelConfig {
   const level = LEVELS[levelNumber - 1]

@@ -14,7 +14,7 @@ import type {
 } from '../engine/types'
 import { createGame, legalActions, step } from '../engine/engine'
 import { cardId } from '../engine/deck'
-import { handName } from '../engine/describe'
+import { L } from '../i18n'
 import { seedFrom } from '../engine/rng'
 import { estimateEquity, chenScore, strengthLabel, type StrengthLabel } from '../engine/strength'
 import { decide } from '../bots/decide'
@@ -249,7 +249,7 @@ export function startLevel(levelNumber: number): void {
     return {
       seat: p.seat,
       playerId: p.id,
-      name: persona?.name ?? 'You',
+      name: persona?.name ?? L.table.you,
       emoji: persona?.emoji ?? '🙂',
       color: persona?.color ?? '#ffd166',
       isHero: p.id === 'hero',
@@ -499,7 +499,7 @@ function applyEvent(ev: GameEvent): void {
         setSeat(post.playerId, {
           stack: seat.stack - post.amount,
           committed: post.kind === 'ante' ? seat.committed : seat.committed + post.amount,
-          lastAction: post.kind === 'ante' ? 'ante' : post.kind.toUpperCase(),
+          lastAction: post.kind === 'ante' ? L.seat.ante : post.kind.toUpperCase(),
         })
         set({ pot: get().pot + (post.kind === 'ante' ? post.amount : 0) })
       }
@@ -548,14 +548,14 @@ function applyEvent(ev: GameEvent): void {
       break
     case 'player-declared': {
       sfx.click()
-      setSeat(ev.playerId, { lastAction: 'ready' })
+      setSeat(ev.playerId, { lastAction: L.seat.ready })
       break
     }
     case 'declarations-revealed': {
       for (const d of ev.declarations) {
         setSeat(d.playerId, {
           declared: d.choice,
-          lastAction: d.choice === 'stay' ? 'STAY' : 'FOLD',
+          lastAction: d.choice === 'stay' ? L.seat.stay : L.seat.fold,
           ...(d.choice === 'fold' ? { status: 'folded' as PlayerStatus } : {}),
         })
       }
@@ -607,7 +607,7 @@ function applyEvent(ev: GameEvent): void {
           cards: r.cards,
           cardCount: r.cards.length,
           revealed: true,
-          handLabel: handName(r.rank),
+          handLabel: L.hands.handName(r.rank),
           bestCardIds: r.rank.cardsUsed.map(cardId),
         })
         if (r.playerId === 'hero') useProgress.getState().recordCodex(r.rank.category)
@@ -643,7 +643,7 @@ function onPotAwarded(ev: Extract<GameEvent, { type: 'pot-awarded' }>): void {
     setSeat(award.playerId, {
       stack: seat.stack + award.amount,
       winner: true,
-      handLabel: award.rank ? handName(award.rank) : seat.handLabel,
+      handLabel: award.rank ? L.hands.handName(award.rank) : seat.handLabel,
     })
   }
   set({ pot: 0 })
@@ -1008,13 +1008,13 @@ function playActionSound(action: ActionType): void {
 }
 
 function actionLabel(action: ActionType, amount: number, allIn: boolean): string {
-  if (allIn) return 'ALL IN'
+  if (allIn) return L.seat.allIn
   switch (action) {
-    case 'check': return 'check'
-    case 'fold': return 'fold'
-    case 'call': return `call ${amount}`
-    case 'bet': return `bet ${amount}`
-    case 'raise': return `raise ${amount}`
+    case 'check': return L.seat.action.check
+    case 'fold': return L.seat.action.fold
+    case 'call': return L.seat.action.call(amount)
+    case 'bet': return L.seat.action.bet(amount)
+    case 'raise': return L.seat.action.raise(amount)
     default: return action
   }
 }

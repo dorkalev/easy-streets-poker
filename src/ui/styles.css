@@ -31,6 +31,19 @@
 * { box-sizing: border-box; }
 html, body, #root { height: 100%; margin: 0; }
 
+/* Hebrew: swap in fonts with Hebrew glyphs; Fraunces/Nunito have none. */
+html[dir='rtl'] {
+  --font-display: 'Frank Ruhl Libre', 'Fraunces', serif;
+  --font-body: 'Assistant', 'Nunito', sans-serif;
+}
+
+html[dir='rtl'] .brand-title { font-style: normal; }
+html[dir='rtl'] .codex-pop { right: auto; left: 0; }
+html[dir='rtl'] .newrule ul { text-align: right; }
+html[dir='rtl'] .newrule li { padding: 10px 40px 10px 12px; }
+html[dir='rtl'] .newrule li::before { left: auto; right: 12px; }
+html[dir='rtl'] .coach-card { border-radius: 16px 16px 4px 16px; }
+
 body {
   font-family: var(--font-body);
   background: #160c04;

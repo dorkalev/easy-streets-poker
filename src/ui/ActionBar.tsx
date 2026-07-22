@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { useGame, heroAction, heroDeclare, heroPredict } from '../app/game'
 import { getLevel } from '../levels/levels'
+import { L } from '../i18n'
 import type { ActionType, LegalAction } from '../engine/types'
 
 export function ActionBar() {
@@ -17,14 +18,14 @@ export function ActionBar() {
   const level = levelNumber ? getLevel(levelNumber) : null
   // Open duel = bot cards are face-up; the learner just points at the winner.
   const openDuel = (level?.ui.openDuels ?? 0) >= handNumber
-  const rival = seats.find((s) => !s.isHero)?.name?.split(' ')[0] ?? 'They'
+  const rival = seats.find((s) => !s.isHero)?.name?.split(' ')[0] ?? '?'
 
   const acting = seats.find((s) => s.acting && !s.isHero)
   const status = acting
-    ? `${acting.name} is thinking…`
+    ? L.actions.thinking(acting.name)
     : heroTurn || declare || predictionOpen
       ? ''
-      : '· · ·'
+      : L.actions.idle
 
   return (
     <div className="action-dock">
@@ -32,38 +33,28 @@ export function ActionBar() {
         {predictionOpen && (
           <ActionRow key="predict">
             <span className="predict-title">
-              {openDuel ? 'Both cards are face-up — who wins this duel?' : `${rival}'s card is face-down — take your guess, then we flip!`}
+              {openDuel ? L.predict.titleOpen : L.predict.titleHidden(rival)}
             </span>
             <span className="predict-help">
-              {openDuel
-                ? 'Higher card wins. Compare the two cards (the ladder on the right shows the order).'
-                : `Look at YOUR card: is it likely higher or lower than ${rival}'s hidden one? Big cards usually win.`}
+              {openDuel ? L.predict.helpOpen : L.predict.helpHidden(rival)}
             </span>
             <div className="action-row">
-              <button className="btn btn-predict" onClick={() => heroPredict('win')}>My card wins 💪</button>
-              <button className="btn btn-predict" onClick={() => heroPredict('split')}>It's a tie 🤝</button>
-              <button className="btn btn-predict" onClick={() => heroPredict('lose')}>{rival} wins 😬</button>
+              <button className="btn btn-predict" onClick={() => heroPredict('win')}>{L.predict.myWin}</button>
+              <button className="btn btn-predict" onClick={() => heroPredict('split')}>{L.predict.tie}</button>
+              <button className="btn btn-predict" onClick={() => heroPredict('lose')}>{L.predict.rivalWins(rival)}</button>
             </div>
           </ActionRow>
         )}
 
         {declare && (
           <ActionRow key="declare">
-            <span className="action-status">Both players declare in secret…</span>
+            <span className="action-status">{L.actions.declareStatus}</span>
             <div className="action-row">
-              <button
-                className="btn btn-stay tip tip-up"
-                data-tip="STAY: you're in! If your hand beats everyone else who stayed, the whole pot is yours."
-                onClick={() => heroDeclare('stay')}
-              >
-                STAY 😤
+              <button className="btn btn-stay tip tip-up" data-tip={L.actions.stayTip} onClick={() => heroDeclare('stay')}>
+                {L.actions.stay}
               </button>
-              <button
-                className="btn btn-fold tip tip-up"
-                data-tip="FOLD: drop out safely. You lose only the ante you already paid — a smart fold SAVES chips."
-                onClick={() => heroDeclare('fold')}
-              >
-                FOLD 🏳️
+              <button className="btn btn-fold tip tip-up" data-tip={L.actions.foldDeclareTip} onClick={() => heroDeclare('fold')}>
+                {L.actions.foldDeclare}
               </button>
             </div>
           </ActionRow>
@@ -151,15 +142,12 @@ function BettingControls({
     <ActionRow>
       {noLimit && aggressive && (
         <div className="bet-slider-row">
-          <button className="preset" onClick={() => setAmount(aggressive.min ?? 0)}>Min</button>
-          <button
-            className="preset"
-            onClick={() => setAmount(clampTo(aggressive, toCall + Math.round(pot / 2)))}
-          >
-            ½ Pot
+          <button className="preset" onClick={() => setAmount(aggressive.min ?? 0)}>{L.actions.min}</button>
+          <button className="preset" onClick={() => setAmount(clampTo(aggressive, toCall + Math.round(pot / 2)))}>
+            {L.actions.halfPot}
           </button>
           <button className="preset" onClick={() => setAmount(clampTo(aggressive, toCall + pot))}>
-            Pot
+            {L.actions.pot}
           </button>
           <input
             type="range"
@@ -175,54 +163,50 @@ function BettingControls({
       <div className="action-row">
         <button
           className={`btn btn-fold tip tip-up ${hintClass('fold')}`}
-          data-tip="FOLD: give up this hand. You lose the chips you already put in — but nothing more. Folding bad hands is how winners stay winners."
+          data-tip={L.actions.foldTip}
           onClick={() => heroAction('fold')}
         >
-          Fold
+          {L.actions.fold}
         </button>
         {check && (
           <button
             className={`btn btn-check tip tip-up ${hintClass('check')}`}
-            data-tip="CHECK: stay in the hand for FREE. Only possible when nobody has bet this round — you pass the turn without paying."
+            data-tip={L.actions.checkTip}
             onClick={() => heroAction('check')}
           >
-            Check
+            {L.actions.check}
           </button>
         )}
         {call && (
           <button
             className={`btn btn-call tip tip-up ${hintClass('call')}`}
-            data-tip={`CALL: match the current bet (${toCall} chips) to stay in the hand and see what happens next.`}
+            data-tip={L.actions.callTip(toCall)}
             onClick={() => heroAction('call')}
           >
-            Call {toCall}
+            {L.actions.call(toCall)}
           </button>
         )}
         {bet && (
           <button
             className={`btn btn-bet tip tip-up ${hintClass('bet')}`}
-            data-tip="BET: put chips in first. Everyone else must at least match your bet — or fold and hand you the pot."
+            data-tip={L.actions.betTip}
             onClick={() => heroAction('bet', noLimit ? amount : bet.min)}
           >
-            Bet {noLimit ? amount : bet.min}
+            {L.actions.bet(noLimit ? amount : bet.min ?? 0)}
           </button>
         )}
         {raise && (
           <button
             className={`btn btn-raise tip tip-up ${hintClass('raise')}`}
-            data-tip="RAISE: don't just match their bet — increase it! Now THEY must match your bigger bet, or fold."
+            data-tip={L.actions.raiseTip}
             onClick={() => heroAction('raise', noLimit ? amount : raise.min)}
           >
-            Raise to {noLimit ? amount : raise.min}
+            {L.actions.raiseTo(noLimit ? amount : raise.min ?? 0)}
           </button>
         )}
         {noLimit && aggressive && (
-          <button
-            className="btn btn-allin tip tip-up"
-            data-tip="ALL IN: bet every single chip you have. Maximum pressure, maximum risk — you can't act again this hand."
-            onClick={() => heroAction('all-in')}
-          >
-            All in
+          <button className="btn btn-allin tip tip-up" data-tip={L.actions.allInTip} onClick={() => heroAction('all-in')}>
+            {L.actions.allIn}
           </button>
         )}
       </div>

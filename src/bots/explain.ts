@@ -2,8 +2,8 @@
 // which is how betting concepts get taught without walls of text.
 
 import { bestHand } from '../engine/evaluate'
-import { handName } from '../engine/describe'
 import { HAND_CATEGORY_ORDER } from '../engine/types'
+import { L } from '../i18n'
 import type { BotContext, BotDecision } from './types'
 import { botStrength } from './decide'
 
@@ -12,36 +12,30 @@ const FULL = { enabledHands: HAND_CATEGORY_ORDER, kickersMatter: true, handSize:
 export function explainDecision(ctx: BotContext, decision: BotDecision): string {
   const cards = [...ctx.myCards, ...ctx.community]
   const made = cards.length >= 1
-    ? handName(bestHand(ctx.myCards, ctx.community, { ...FULL, handSize: cards.length >= 5 ? 5 : cards.length >= 2 ? 2 : 1 }))
+    ? L.hands.handName(
+        bestHand(ctx.myCards, ctx.community, {
+          ...FULL,
+          handSize: cards.length >= 5 ? 5 : cards.length >= 2 ? 2 : 1,
+        }),
+      )
     : ''
   const strength = botStrength(ctx)
 
   switch (decision.action) {
     case 'fold':
-      if (ctx.toCall > 0) {
-        return `I only have ${made}, and it costs ${ctx.toCall} to keep going... too expensive. I fold.`
-      }
-      return `${made}? Not worth playing. I fold.`
+      return ctx.toCall > 0 ? L.explain.fold(made, ctx.toCall) : L.explain.foldFree(made)
     case 'stay':
-      return `${made} feels strong enough — I'm staying in!`
+      return L.explain.stay(made)
     case 'check':
-      return strength > 0.5
-        ? `I'll check — no need to scare anyone off yet.`
-        : `Nothing great here. I'll check and see a free card.`
+      return strength > 0.5 ? L.explain.checkStrong : L.explain.checkWeak
     case 'call':
-      return ctx.toCall > 0
-        ? `${ctx.toCall} to call, and the pot has ${ctx.potSize}. With ${made}, that price is fine — call.`
-        : `I call.`
+      return ctx.toCall > 0 ? L.explain.call(ctx.toCall, ctx.potSize, made) : L.explain.callPlain
     case 'bet':
-      return decision.bluffing
-        ? `I'll bet ${decision.amount ?? ''}... (don't tell anyone what I have)`
-        : `I have ${made} — that's worth a bet. Chips in!`
+      return decision.bluffing ? L.explain.betBluff(String(decision.amount ?? '')) : L.explain.betValue(made)
     case 'raise':
-      return decision.bluffing
-        ? `RAISE! ...my cards? Never mind my cards.`
-        : `${made} is too good to just call. Raise!`
+      return decision.bluffing ? L.explain.raiseBluff : L.explain.raiseValue(made)
     case 'all-in':
-      return `Everything. ALL IN.`
+      return L.explain.allIn
   }
   return ''
 }

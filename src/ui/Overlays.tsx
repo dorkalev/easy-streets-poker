@@ -9,6 +9,7 @@ import {
 } from '../app/game'
 import { getLevel, LEVELS } from '../levels/levels'
 import { RANKS, rankShort } from '../engine/deck'
+import { L } from '../i18n'
 import type { StrengthLabel } from '../engine/strength'
 
 // ---------------------------------------------------------------------------
@@ -32,20 +33,18 @@ export function NewRuleBanner() {
             transition={{ type: 'spring', stiffness: 300, damping: 24 }}
           >
             <div className="newrule-tag">
-              {level.levelNumber === 17 ? '★ Final Exam ★' : `New Rule${level.newRules.length > 1 ? 's' : ''}`}
+              {level.levelNumber === 17 ? L.newRule.finalTag : L.newRule.tag(level.newRules.length)}
             </div>
             <h2>{level.title}</h2>
-            <div className="sub">
-              Level {level.levelNumber} · {level.actName}
-            </div>
+            <div className="sub">{L.newRule.levelOf(level.levelNumber, level.actName)}</div>
             <ul>
               {level.newRules.map((rule) => (
                 <li key={rule}>{rule}</li>
               ))}
             </ul>
-            <div className="intro">🎠 Penny: “{level.intro}”</div>
+            <div className="intro">{L.newRule.penny(level.intro)}</div>
             <button className="btn-play" onClick={dismissNewRule}>
-              Deal me in
+              {L.newRule.dealMeIn}
             </button>
           </motion.div>
         </motion.div>
@@ -72,12 +71,12 @@ export function CoachBubble() {
         >
           <div className="coach-avatar">🎠</div>
           <div className="coach-card">
-            <div className="coach-name">Penny the Dealer</div>
+            <div className="coach-name">{L.coach.name}</div>
             {coach.text}
             {coach.blocking && (
               <div>
                 <button className="coach-btn" onClick={dismissCoach}>
-                  Got it
+                  {L.coach.gotIt}
                 </button>
               </div>
             )}
@@ -124,10 +123,10 @@ export function PredictToast() {
           transition={{ type: 'spring', stiffness: 380, damping: 18 }}
         >
           <div className={`big ${result.correct ? 'good' : 'bad'}`}>
-            {result.correct ? 'CALLED IT!' : 'NOT QUITE!'}
+            {result.correct ? L.predict.calledIt : L.predict.notQuite}
           </div>
           <div className="why">
-            You guessed “{result.guess}” — it was “{result.actual}”.
+            {L.predict.why(L.predict.words[result.guess], L.predict.words[result.actual])}
           </div>
         </motion.div>
       )}
@@ -151,7 +150,7 @@ export function Celebration() {
     [celebration],
   )
   if (!celebration) return null
-  const word = celebration === 'royal' ? 'ROYAL FLUSH!!' : celebration === 'big' ? 'MONSTER HAND!' : 'YOU WIN!'
+  const word = L.celebration[celebration]
   return (
     <div className="celebration">
       {pieces.map((p, i) => (
@@ -198,7 +197,7 @@ export function LevelEndModal() {
             animate={{ scale: 1, y: 0, opacity: 1 }}
             transition={{ type: 'spring', stiffness: 300, damping: 22 }}
           >
-            <h2>{end.outcome === 'won' ? 'Level Complete!' : 'Not This Time'}</h2>
+            <h2>{end.outcome === 'won' ? L.levelEnd.won : L.levelEnd.lost}</h2>
             <div className="lvl-sub">{end.title}</div>
             <div className="stars-row">
               {[1, 2, 3].map((i) => (
@@ -215,24 +214,24 @@ export function LevelEndModal() {
             </div>
             {end.profit !== 0 && (
               <div className="result-line">
-                {end.profit > 0 ? `You made ${end.profit} chips 🪙` : `Down ${-end.profit} chips this time`}
+                {end.profit > 0 ? L.levelEnd.profit(end.profit) : L.levelEnd.down(-end.profit)}
               </div>
             )}
             <div className={`result-line ${end.questDone ? 'quest-done' : 'quest-miss'}`}>
-              {end.questDone ? '✓ Quest complete!' : '· Quest missed — replay any time'}
+              {end.questDone ? L.levelEnd.questDone : L.levelEnd.questMiss}
             </div>
             <div className="btn-row">
               <button className="btn-secondary" onClick={retryLevel}>
-                {end.outcome === 'won' ? 'Replay' : 'Try again'}
+                {end.outcome === 'won' ? L.levelEnd.replay : L.levelEnd.tryAgain}
               </button>
               {end.outcome === 'won' && hasNext && (
                 <button className="btn-play" onClick={() => startLevel(levelNumber! + 1)}>
-                  Next level →
+                  {L.levelEnd.next}
                 </button>
               )}
               {end.outcome === 'won' && !hasNext && (
                 <button className="btn-play" onClick={() => startLevel(levelNumber!)}>
-                  Champion! Run it back 🏆
+                  {L.levelEnd.champion}
                 </button>
               )}
             </div>
@@ -269,19 +268,16 @@ export function StrengthMeter() {
   const level = levelNumber ? getLevel(levelNumber) : null
   if (!level?.ui.showHandStrengthMeter || !strength) return null
   return (
-    <div
-      className="strength-meter tip tip-up"
-      data-tip="HAND STRENGTH METER: a training tool that shows how strong your cards are right now, from 🐟 trash to 🐉 monster. It updates every time a new card appears. (Real players don't get one — it retires in later levels!)"
-    >
+    <div className="strength-meter tip tip-up" data-tip={L.meter.tip}>
       <div className="label">
-        <span>Hand strength</span>
+        <span>{L.meter.title}</span>
       </div>
       <div className="meter-track">
         <span className="meter-marker" style={{ left: `${METER_POS[strength]}%` }}>
           {METER_EMOJI[strength]}
         </span>
       </div>
-      <div className="meter-word">{strength}</div>
+      <div className="meter-word">{L.meter.words[strength]}</div>
     </div>
   )
 }
@@ -300,17 +296,14 @@ export function RankRibbon() {
   for (const c of community) lit.add(c.rank)
 
   return (
-    <div
-      className="rank-ribbon tip tip-left"
-      data-tip="THE RANK LADDER: every card's strength in order — 2 is the weakest (bottom), Ace is the strongest (top). Cards currently on the table glow gold, so you can see at a glance who's higher."
-    >
-      <div className="ribbon-head">HIGH</div>
+    <div className="rank-ribbon tip tip-left" data-tip={L.ribbon.tip}>
+      <div className="ribbon-head">{L.ribbon.high}</div>
       {[...RANKS].reverse().map((r) => (
         <div key={r} className={`ribbon-rank ${lit.has(r) ? 'lit' : ''}`}>
           {rankShort(r)}
         </div>
       ))}
-      <div className="ribbon-head">LOW</div>
+      <div className="ribbon-head">{L.ribbon.low}</div>
     </div>
   )
 }
