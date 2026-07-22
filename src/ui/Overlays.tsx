@@ -119,9 +119,9 @@ export function PredictToast() {
       {result && (
         <motion.div
           className="predict-toast"
-          initial={{ opacity: 0, scale: 0.6, x: '-50%' }}
-          animate={{ opacity: 1, scale: 1, x: '-50%' }}
-          exit={{ opacity: 0, y: -20, x: '-50%' }}
+          initial={{ opacity: 0, scale: 0.6, x: '-50%', y: '-50%' }}
+          animate={{ opacity: 1, scale: 1, x: '-50%', y: '-50%' }}
+          exit={{ opacity: 0, scale: 0.85, x: '-50%', y: '-70%' }}
           transition={{ type: 'spring', stiffness: 380, damping: 18 }}
         >
           <div className={`big ${result.correct ? 'good' : 'bad'}`}>
