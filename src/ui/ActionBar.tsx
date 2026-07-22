@@ -28,8 +28,11 @@ export function ActionBar() {
       : L.actions.idle
 
   return (
+    // NOTE: no mode="wait" here — with rapid state churn (coach bubble,
+    // prediction toast, hand transitions) an interrupted exit can wedge the
+    // "wait" queue and the next child never mounts, soft-locking the game.
     <div className="action-dock">
-      <AnimatePresence mode="wait">
+      <AnimatePresence>
         {predictionOpen && (
           <ActionRow key="predict">
             <span className="predict-title">

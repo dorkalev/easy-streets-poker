@@ -167,6 +167,10 @@ interface Orc {
   overrideCursor: Record<string, number>
   /** Guards against double-scheduling a bot decision timer. */
   awaitingBot: boolean
+  /** Re-entry latch: pump() can fire multiple times while phase is
+   * hand-complete (batch pump, toast auto-clear, coach auto-dismiss) —
+   * hand completion side effects must run exactly once per hand. */
+  lastCompletedHand: number
   // run trackers
   handsPlayed: number
   handsWon: number
@@ -192,6 +196,7 @@ const orc: Orc = {
   prediction: null,
   overrideCursor: {},
   awaitingBot: false,
+  lastCompletedHand: -1,
   handsPlayed: 0,
   handsWon: 0,
   predictionsCorrect: 0,
@@ -235,6 +240,7 @@ export function startLevel(levelNumber: number): void {
   orc.actionCounter = 0
   orc.coach = { firedIds: [...progress.coachFiredIds] }
   orc.coachQueue = []
+  orc.lastCompletedHand = -1
   orc.handsPlayed = 0
   orc.handsWon = 0
   orc.predictionsCorrect = 0
@@ -337,13 +343,22 @@ export function retryLevel(): void {
 
 function dispatch(action: Parameters<typeof step>[1]): void {
   if (!orc.engine) return
-  const result = step(orc.engine, action)
+  let result: ReturnType<typeof step>
+  try {
+    result = step(orc.engine, action)
+  } catch (err) {
+    // An illegal dispatch must never kill the timer chain that issued it.
+    console.error('engine rejected action', action, err)
+    return
+  }
   orc.engine = result.state
   processEvents(result.events)
 }
 
 function startHand(): void {
   if (!orc.engine || orc.ended) return
+  // A stale timer may fire after the next hand already started.
+  if (orc.engine.phase !== 'idle' && orc.engine.phase !== 'hand-complete') return
   resetHandTrackers()
   dispatch({ type: 'START_HAND' })
 }
@@ -786,6 +801,8 @@ function onHandComplete(): void {
   const level = orc.level
   const engine = orc.engine
   if (!level || !engine) return
+  if (orc.lastCompletedHand === engine.handNumber) return // pump re-entry
+  orc.lastCompletedHand = engine.handNumber
   orc.handsPlayed += 1
   syncRun()
 
