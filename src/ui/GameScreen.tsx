@@ -59,7 +59,7 @@ function ProgressPane() {
               }}
             >
               <span className="lnode-num">{result?.completed && !isCurrent ? '✓' : n}</span>
-              {stars > 0 && <span className="lnode-stars">{'•'.repeat(stars)}</span>}
+              {stars > 0 && <span className="lnode-stars">{'★'.repeat(stars)}</span>}
             </button>
           </Fragment>
         )
@@ -186,16 +186,22 @@ export function GameScreen() {
 
   return (
     <div className="game">
-      <ProgressPane />
-      <div className="hud">
-        <div className="hud-level tip tip-down" data-tip={levelTip}>
-          <span className="t">{level.title}</span>
-          <span className="s">
+      <header className="topbar">
+        <div className="brand tip tip-down" data-tip={levelTip}>
+          <div className="brand-kicker">♠ ♥ The Card Parlor ♦ ♣</div>
+          <div className="brand-title">{level.title}</div>
+          <div className="brand-meta">
             Level {level.levelNumber} · Hand {Math.max(1, handNumber)}
             {blinds ? ` · Blinds ${blinds.small}/${blinds.big}` : ''}
-          </span>
+          </div>
         </div>
-        <div className="hud-spacer" />
+        <div className="journey">
+          <ProgressPane />
+        </div>
+        <SettingsCluster />
+      </header>
+
+      <div className="subhud">
         <div className="hud-pill tip tip-down" data-tip={goalTip}>
           🎯 {goal}
         </div>
@@ -207,7 +213,6 @@ export function GameScreen() {
             🪙 <b>{hero.stack}</b>
           </div>
         )}
-        <SettingsCluster />
       </div>
 
       <Table />
