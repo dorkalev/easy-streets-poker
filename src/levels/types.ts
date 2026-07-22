@@ -31,6 +31,12 @@ export interface LevelUI {
   botsThinkOutLoud: boolean
   /** L1–3: guess win/lose/split before the flip. */
   peekAndPredict: boolean
+  /**
+   * Training wheels for Peek & Predict: the first N hands are played with the
+   * bot's cards FACE-UP, so the learner just points at the winner before any
+   * hidden-information guessing starts.
+   */
+  openDuels: number
   /** Green/yellow/red preflop tint on hero hole cards. */
   stoplight: boolean
 }

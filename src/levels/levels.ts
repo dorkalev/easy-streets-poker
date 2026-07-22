@@ -23,6 +23,7 @@ const UI_OFF: LevelUI = {
   showActionHints: false,
   botsThinkOutLoud: false,
   peekAndPredict: false,
+  openDuels: 0,
   stoplight: false,
 }
 
@@ -36,13 +37,17 @@ const L01: LevelConfig = {
   actName: 'Card School',
   title: 'High Noon',
   subtitle: 'One card each. Highest card wins.',
-  newRules: ['Cards have a rank order: 2 is the lowest, Ace is the highest.'],
-  intro: 'Welcome to the kitchen table, kid. One card each — call the duel before the flip!',
+  newRules: [
+    'You and Callie each get ONE card. The higher card wins the duel.',
+    'Cards have a rank order: 2 is the lowest, Ace is the highest.',
+    'Your job: call the winner BEFORE the duel is decided.',
+  ],
+  intro: 'Welcome to the kitchen table, kid. We start easy: both cards face-up — just point at the winner.',
   botIds: ['callie'],
   handsToComplete: 12,
   winCondition: { type: 'predictions', target: 5 },
   quest: { type: 'correct-predictions', count: 8, label: 'Call 8 duels correctly' },
-  ui: { ...UI_OFF, showRankRibbon: true, peekAndPredict: true, botsThinkOutLoud: true },
+  ui: { ...UI_OFF, showRankRibbon: true, peekAndPredict: true, openDuels: 3, botsThinkOutLoud: true },
   difficulty: 0,
   rebuys: false,
   rules: {
@@ -74,7 +79,7 @@ const L02: LevelConfig = {
   handsToComplete: 14,
   winCondition: { type: 'predictions', target: 6 },
   quest: { type: 'correct-predictions', count: 10, label: 'Call 10 flips correctly (splits count!)' },
-  ui: { ...UI_OFF, showRankRibbon: true, peekAndPredict: true, botsThinkOutLoud: true },
+  ui: { ...UI_OFF, showRankRibbon: true, peekAndPredict: true, openDuels: 1, botsThinkOutLoud: true },
   difficulty: 0,
   rebuys: false,
   rules: {

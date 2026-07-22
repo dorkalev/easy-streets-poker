@@ -24,6 +24,26 @@ export interface CoachTrigger {
 
 const TRIGGERS: CoachTrigger[] = [
   {
+    id: 'open-duel-explainer',
+    once: true,
+    on: ['cards-dealt'],
+    when: (_ev, state, level) =>
+      level.ui.peekAndPredict && level.ui.openDuels > 0 && state.handNumber === 0,
+    text: () =>
+      'Easy start: BOTH cards are face-up. The higher card wins the duel — the ladder on the right shows the order, 2 at the bottom, Ace on top. Just tap who wins!',
+    blocking: true,
+  },
+  {
+    id: 'hidden-duel-explainer',
+    once: true,
+    on: ['cards-dealt'],
+    when: (_ev, state, level) =>
+      level.ui.peekAndPredict && level.ui.openDuels > 0 && state.handNumber === level.ui.openDuels,
+    text: () =>
+      "Now the real thing: her card flips FACE-DOWN. Look at YOUR card and guess how the duel ends. A big card is usually a win, a small card usually isn't. Guess, then we flip!",
+    blocking: true,
+  },
+  {
     id: 'first-tie-split',
     once: true,
     on: ['pot-awarded'],

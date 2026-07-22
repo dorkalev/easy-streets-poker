@@ -664,6 +664,23 @@ button {
   letter-spacing: 0.03em;
 }
 
+.predict-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 19px;
+  color: var(--gold-glow);
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.4);
+}
+
+.predict-help {
+  font-size: 13px;
+  color: #b9d2c3;
+  max-width: 520px;
+  text-align: center;
+  line-height: 1.4;
+  margin-top: -4px;
+}
+
 .action-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; justify-content: center; }
 
 .btn {

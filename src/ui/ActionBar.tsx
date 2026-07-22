@@ -12,8 +12,12 @@ export function ActionBar() {
   const seats = useGame((g) => g.seats)
   const strength = useGame((g) => g.heroStrength)
   const pot = useGame((g) => g.pot)
+  const handNumber = useGame((g) => g.handNumber)
 
   const level = levelNumber ? getLevel(levelNumber) : null
+  // Open duel = bot cards are face-up; the learner just points at the winner.
+  const openDuel = (level?.ui.openDuels ?? 0) >= handNumber
+  const rival = seats.find((s) => !s.isHero)?.name?.split(' ')[0] ?? 'They'
 
   const acting = seats.find((s) => s.acting && !s.isHero)
   const status = acting
@@ -27,11 +31,18 @@ export function ActionBar() {
       <AnimatePresence mode="wait">
         {predictionOpen && (
           <ActionRow key="predict">
-            <span className="action-status">Call the duel — how does this end?</span>
+            <span className="predict-title">
+              {openDuel ? 'Both cards are face-up — who wins this duel?' : `${rival}'s card is face-down — take your guess, then we flip!`}
+            </span>
+            <span className="predict-help">
+              {openDuel
+                ? 'Higher card wins. Compare the two cards (the ladder on the right shows the order).'
+                : `Look at YOUR card: is it likely higher or lower than ${rival}'s hidden one? Big cards usually win.`}
+            </span>
             <div className="action-row">
-              <button className="btn btn-predict" onClick={() => heroPredict('win')}>I win 💪</button>
-              <button className="btn btn-predict" onClick={() => heroPredict('split')}>Split 🤝</button>
-              <button className="btn btn-predict" onClick={() => heroPredict('lose')}>I lose 😬</button>
+              <button className="btn btn-predict" onClick={() => heroPredict('win')}>My card wins 💪</button>
+              <button className="btn btn-predict" onClick={() => heroPredict('split')}>It's a tie 🤝</button>
+              <button className="btn btn-predict" onClick={() => heroPredict('lose')}>{rival} wins 😬</button>
             </div>
           </ActionRow>
         )}

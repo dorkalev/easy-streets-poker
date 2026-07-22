@@ -521,11 +521,19 @@ function applyEvent(ev: GameEvent): void {
     }
     case 'cards-dealt': {
       sfx.deal()
+      // Open duels: the first N Peek & Predict hands play the bots face-up,
+      // so the learner points at the winner before hidden-info guessing.
+      const open =
+        (orc.level.ui.openDuels ?? 0) > (orc.engine?.handNumber ?? 0) && orc.level.ui.peekAndPredict
       for (const deal of ev.deals) {
         if (deal.playerId === 'hero') {
           setSeat('hero', { cards: deal.cards, cardCount: deal.cards.length })
         } else {
-          setSeat(deal.playerId, { cards: [], cardCount: deal.cards.length })
+          setSeat(deal.playerId, {
+            cards: open ? deal.cards : [],
+            cardCount: deal.cards.length,
+            revealed: open,
+          })
         }
       }
       updateHeroMeters()
