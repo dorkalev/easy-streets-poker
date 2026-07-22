@@ -51,8 +51,20 @@ export function ActionBar() {
           <ActionRow key="declare">
             <span className="action-status">Both players declare in secret…</span>
             <div className="action-row">
-              <button className="btn btn-stay" onClick={() => heroDeclare('stay')}>STAY 😤</button>
-              <button className="btn btn-fold" onClick={() => heroDeclare('fold')}>FOLD 🏳️</button>
+              <button
+                className="btn btn-stay tip tip-up"
+                data-tip="STAY: you're in! If your hand beats everyone else who stayed, the whole pot is yours."
+                onClick={() => heroDeclare('stay')}
+              >
+                STAY 😤
+              </button>
+              <button
+                className="btn btn-fold tip tip-up"
+                data-tip="FOLD: drop out safely. You lose only the ante you already paid — a smart fold SAVES chips."
+                onClick={() => heroDeclare('fold')}
+              >
+                FOLD 🏳️
+              </button>
             </div>
           </ActionRow>
         )}
@@ -161,22 +173,35 @@ function BettingControls({
         </div>
       )}
       <div className="action-row">
-        <button className={`btn btn-fold ${hintClass('fold')}`} onClick={() => heroAction('fold')}>
+        <button
+          className={`btn btn-fold tip tip-up ${hintClass('fold')}`}
+          data-tip="FOLD: give up this hand. You lose the chips you already put in — but nothing more. Folding bad hands is how winners stay winners."
+          onClick={() => heroAction('fold')}
+        >
           Fold
         </button>
         {check && (
-          <button className={`btn btn-check ${hintClass('check')}`} onClick={() => heroAction('check')}>
+          <button
+            className={`btn btn-check tip tip-up ${hintClass('check')}`}
+            data-tip="CHECK: stay in the hand for FREE. Only possible when nobody has bet this round — you pass the turn without paying."
+            onClick={() => heroAction('check')}
+          >
             Check
           </button>
         )}
         {call && (
-          <button className={`btn btn-call ${hintClass('call')}`} onClick={() => heroAction('call')}>
+          <button
+            className={`btn btn-call tip tip-up ${hintClass('call')}`}
+            data-tip={`CALL: match the current bet (${toCall} chips) to stay in the hand and see what happens next.`}
+            onClick={() => heroAction('call')}
+          >
             Call {toCall}
           </button>
         )}
         {bet && (
           <button
-            className={`btn btn-bet ${hintClass('bet')}`}
+            className={`btn btn-bet tip tip-up ${hintClass('bet')}`}
+            data-tip="BET: put chips in first. Everyone else must at least match your bet — or fold and hand you the pot."
             onClick={() => heroAction('bet', noLimit ? amount : bet.min)}
           >
             Bet {noLimit ? amount : bet.min}
@@ -184,14 +209,19 @@ function BettingControls({
         )}
         {raise && (
           <button
-            className={`btn btn-raise ${hintClass('raise')}`}
+            className={`btn btn-raise tip tip-up ${hintClass('raise')}`}
+            data-tip="RAISE: don't just match their bet — increase it! Now THEY must match your bigger bet, or fold."
             onClick={() => heroAction('raise', noLimit ? amount : raise.min)}
           >
             Raise to {noLimit ? amount : raise.min}
           </button>
         )}
         {noLimit && aggressive && (
-          <button className="btn btn-allin" onClick={() => heroAction('all-in')}>
+          <button
+            className="btn btn-allin tip tip-up"
+            data-tip="ALL IN: bet every single chip you have. Maximum pressure, maximum risk — you can't act again this hand."
+            onClick={() => heroAction('all-in')}
+          >
             All in
           </button>
         )}

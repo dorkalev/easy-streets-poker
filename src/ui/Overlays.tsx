@@ -269,7 +269,10 @@ export function StrengthMeter() {
   const level = levelNumber ? getLevel(levelNumber) : null
   if (!level?.ui.showHandStrengthMeter || !strength) return null
   return (
-    <div className="strength-meter">
+    <div
+      className="strength-meter tip tip-up"
+      data-tip="HAND STRENGTH METER: a training tool that shows how strong your cards are right now, from 🐟 trash to 🐉 monster. It updates every time a new card appears. (Real players don't get one — it retires in later levels!)"
+    >
       <div className="label">
         <span>Hand strength</span>
       </div>
@@ -297,7 +300,10 @@ export function RankRibbon() {
   for (const c of community) lit.add(c.rank)
 
   return (
-    <div className="rank-ribbon">
+    <div
+      className="rank-ribbon tip tip-left"
+      data-tip="THE RANK LADDER: every card's strength in order — 2 is the weakest (bottom), Ace is the strongest (top). Cards currently on the table glow gold, so you can see at a glance who's higher."
+    >
       <div className="ribbon-head">HIGH</div>
       {[...RANKS].reverse().map((r) => (
         <div key={r} className={`ribbon-rank ${lit.has(r) ? 'lit' : ''}`}>

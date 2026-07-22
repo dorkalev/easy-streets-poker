@@ -712,19 +712,19 @@ button {
 .btn-stay { background: linear-gradient(180deg, #4da375, #337653); font-size: 20px; padding: 18px 42px; }
 .btn-predict { background: linear-gradient(180deg, #5b93bd, #3d6d92); font-size: 17px; padding: 16px 30px; }
 
-.btn.hinted::before {
-  content: '';
-  position: absolute;
-  inset: -5px;
-  border-radius: 20px;
-  border: 2.5px solid var(--gold-glow);
+.btn.hinted {
   animation: hint-pulse 1.1s ease-in-out infinite;
-  pointer-events: none;
 }
 
 @keyframes hint-pulse {
-  0%, 100% { opacity: 0.25; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.045); }
+  0%, 100% {
+    box-shadow: 0 5px 0 rgba(0, 0, 0, 0.45), 0 10px 22px rgba(0, 0, 0, 0.35),
+      0 0 0 2px rgba(255, 217, 122, 0.25);
+  }
+  50% {
+    box-shadow: 0 5px 0 rgba(0, 0, 0, 0.45), 0 10px 22px rgba(0, 0, 0, 0.35),
+      0 0 0 6px rgba(255, 217, 122, 0.85);
+  }
 }
 
 .bet-slider-row {
@@ -1098,6 +1098,99 @@ button {
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
+
+/* ============================================================
+   TOOLTIPS — "explain it like I have no clue"
+   ============================================================ */
+
+/* NOTE: .tip must never set `position` — several tipped elements (ribbon,
+   meter, dealer chip) are absolutely positioned and would fall out of place.
+   Statically-positioned tip targets get position: relative explicitly below. */
+.tip {
+  cursor: help;
+}
+
+.hud-pill.tip,
+.hud-level.tip,
+.pot.tip {
+  position: relative;
+}
+
+.tip::after {
+  content: attr(data-tip);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) translateY(4px) scale(0.96);
+  background: linear-gradient(170deg, #fdf8ea, var(--paper));
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: 0;
+  text-transform: none;
+  line-height: 1.45;
+  text-align: left;
+  white-space: normal;
+  width: max-content;
+  max-width: 250px;
+  padding: 10px 13px;
+  border-radius: 12px;
+  border-top: 4px solid var(--brass);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease 0.12s, transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1) 0.12s;
+  z-index: 40;
+}
+
+.tip::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease 0.12s;
+  z-index: 41;
+}
+
+.tip:hover::after,
+.tip:hover::before,
+.tip:focus-visible::after,
+.tip:focus-visible::before {
+  opacity: 1;
+}
+
+/* below the element (HUD row) */
+.tip-down::after { top: calc(100% + 9px); }
+.tip-down:hover::after, .tip-down:focus-visible::after { transform: translateX(-50%) translateY(0) scale(1); }
+.tip-down::before { top: calc(100% - 3px); border-bottom-color: var(--brass); }
+
+/* above the element (pot, action buttons, meter) */
+.tip-up::after { bottom: calc(100% + 9px); top: auto; }
+.tip-up:hover::after, .tip-up:focus-visible::after { transform: translateX(-50%) translateY(0) scale(1); }
+.tip-up::before { bottom: calc(100% - 3px); border-top-color: #fdf8ea; }
+
+/* to the left (rank ribbon on the right edge) */
+.tip-left::after {
+  right: calc(100% + 10px);
+  left: auto;
+  top: 50%;
+  transform: translateY(-50%) translateX(4px) scale(0.96);
+}
+.tip-left:hover::after, .tip-left:focus-visible::after { transform: translateY(-50%) translateX(0) scale(1); }
+.tip-left::before {
+  right: calc(100% - 2px);
+  left: auto;
+  top: 50%;
+  transform: translateY(-50%);
+  border-left-color: #fdf8ea;
+}
+
+/* subtle discoverability nudge on HUD pills */
+.hud-pill.tip { border-bottom: 1px dashed rgba(242, 193, 78, 0.55); }
 
 /* misc */
 .fade-scroll::-webkit-scrollbar { width: 10px; }

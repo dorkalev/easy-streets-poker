@@ -86,7 +86,11 @@ export function Table() {
               ))}
             </AnimatePresence>
           </div>
-          <motion.div layout className={`pot ${pot > 0 ? '' : 'empty'}`}>
+          <motion.div
+            layout
+            className={`pot tip tip-up ${pot > 0 ? '' : 'empty'}`}
+            data-tip="THE POT: every chip that gets bet lands in this pile. Win the hand, win the whole pot."
+          >
             POT {pot}
             {carryPot > 0 && <span className="carry-tag"> (carried!)</span>}
           </motion.div>
@@ -146,7 +150,14 @@ function Seat({ seat, pos, stoplight }: { seat: SeatView; pos: Pos; stoplight: '
         <div className="avatar" style={{ ['--seat-color' as string]: seat.color }}>
           {seat.emoji}
         </div>
-        {seat.isButton && <div className="dealer-chip">D</div>}
+        {seat.isButton && (
+          <div
+            className="dealer-chip tip tip-up"
+            data-tip="THE DEALER BUTTON: marks who 'deals' this hand. It moves one seat left every hand and decides the acting order."
+          >
+            D
+          </div>
+        )}
       </div>
 
       <div className="seat-name">{seat.name}</div>
