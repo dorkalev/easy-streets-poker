@@ -112,6 +112,8 @@ export const en = {
     calledIt: 'CALLED IT!',
     notQuite: 'NOT QUITE!',
     why: (guess: string, actual: string) => `You guessed “${guess}” — it was “${actual}”.`,
+    beats: (winner: string, loser: string) => `${winner} beats ${loser}.`,
+    bothHave: (hand: string) => `Both have ${hand} — it's a split!`,
     words: { win: 'win', lose: 'lose', split: 'split' },
   },
 

@@ -83,6 +83,14 @@ describe('evaluate — partial rank sets (demotion)', () => {
 describe('evaluate — kickersMatter: false', () => {
   const opts = { enabledHands: ['high-card', 'pair'] as HandCategory[], kickersMatter: false }
 
+  it('pair of Jacks beats Queen-high (user-reported duel)', () => {
+    const jacks = evaluate(cards('11h', '11d'), opts)
+    const queenHigh = evaluate(cards('12s', '2c'), opts)
+    expect(jacks.category).toBe('pair')
+    expect(queenHigh.category).toBe('high-card')
+    expect(compareRanks(jacks, queenHigh)).toBeGreaterThan(0)
+  })
+
   it('same pair rank splits regardless of kickers', () => {
     const a = evaluate(cards('9s', '9d'), opts)
     const b = evaluate(cards('9c', '9h'), opts)

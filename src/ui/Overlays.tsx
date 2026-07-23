@@ -125,6 +125,7 @@ export function PredictToast() {
           <div className={`big ${result.correct ? 'good' : 'bad'}`}>
             {result.correct ? L.predict.calledIt : L.predict.notQuite}
           </div>
+          <div className="why strong">{result.line}</div>
           <div className="why">
             {L.predict.why(L.predict.words[result.guess], L.predict.words[result.actual])}
           </div>

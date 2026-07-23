@@ -1120,6 +1120,7 @@ button {
 .predict-toast .big.good { color: var(--gold-glow); }
 .predict-toast .big.bad { color: #e8988a; }
 .predict-toast .why { font-size: 14px; color: var(--cream-dim); font-weight: 700; margin-top: 4px; }
+.predict-toast .why.strong { color: var(--gold-glow); font-size: 15px; margin-top: 8px; }
 
 /* celebration confetti */
 .celebration {

@@ -119,6 +119,8 @@ export const he: Strings = {
     calledIt: "קלעת בול!",
     notQuite: "לא בדיוק!",
     why: (guess, actual) => `ניחשת ”${guess}“ — התוצאה: ”${actual}“.`,
+    beats: (winner, loser) => `${winner} מנצח ${loser}.`,
+    bothHave: (hand) => `לשניכם ${hand} — תיקו!`,
     words: { win: "ניצחון", lose: "הפסד", split: "תיקו" },
   },
 

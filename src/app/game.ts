@@ -88,7 +88,7 @@ export interface GameView {
   heroTurn: { legal: LegalAction[]; toCall: number } | null
   heroDeclare: boolean
   predictionOpen: boolean
-  predictionResult: { guess: Prediction; actual: Prediction; correct: boolean } | null
+  predictionResult: { guess: Prediction; actual: Prediction; correct: boolean; line: string } | null
   coach: CoachMessage | null
   newRuleOpen: boolean
   celebration: 'small' | 'big' | 'royal' | null
@@ -755,8 +755,15 @@ function gradePrediction(reveals: { playerId: string; rank: HandRank }[]): void 
   const hero = reveals.find((r) => r.playerId === 'hero')
   const others = reveals.filter((r) => r.playerId !== 'hero')
   if (!hero || others.length === 0) return
-  const best = Math.max(...others.map((r) => r.rank.score))
+  const bestReveal = others.reduce((a, b) => (a.rank.score >= b.rank.score ? a : b))
+  const best = bestReveal.rank.score
   const actual: Prediction = hero.rank.score > best ? 'win' : hero.rank.score < best ? 'lose' : 'split'
+  const heroHand = L.hands.handName(hero.rank)
+  const rivalHand = L.hands.handName(bestReveal.rank)
+  const line =
+    actual === 'win' ? L.predict.beats(heroHand, rivalHand)
+    : actual === 'lose' ? L.predict.beats(rivalHand, heroHand)
+    : L.predict.bothHave(heroHand)
   const correct = actual === orc.prediction
   if (correct) {
     orc.predictionsCorrect += 1
@@ -768,7 +775,7 @@ function gradePrediction(reveals: { playerId: string; rank: HandRank }[]): void 
   } else {
     orc.predictionStreak = 0
   }
-  set({ predictionResult: { guess: orc.prediction, actual, correct } })
+  set({ predictionResult: { guess: orc.prediction, actual, correct, line } })
   if (correct) sfx.winSmall()
   else sfx.lose()
   syncRun()
