@@ -265,14 +265,14 @@ export const en = {
         'Your job: call the winner BEFORE the duel is decided.',
       ],
       intro: 'Welcome to the kitchen table, kid. We start easy: both cards face-up — just point at the winner.',
-      quest: 'Call 8 duels correctly',
+      quest: 'Call 3 duels correctly in a row',
     },
     L02: {
       title: 'Copycats',
       subtitle: 'Same rank? Nobody loses.',
       newRules: ['Ties SPLIT the pot.', 'Suits never break a tie — they are just outfits.'],
       intro: 'Watch close — some of these cards are twins. What happens then?',
-      quest: 'Call 10 flips correctly (splits count!)',
+      quest: 'Call 4 flips in a row (splits count!)',
     },
     L03: {
       title: 'Perfect Pair',

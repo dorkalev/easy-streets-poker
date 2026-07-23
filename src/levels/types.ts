@@ -11,6 +11,7 @@ export type WinCondition =
 /** Star-2 quest: a concept-proving feat, detected from the event stream. */
 export type Quest =
   | { type: 'correct-predictions'; count: number; label: string }
+  | { type: 'prediction-streak'; count: number; label: string } // N correct in a row
   | { type: 'win-with-category'; categories: HandCategory[]; count: number; label: string }
   | { type: 'win-raised-pot'; count: number; label: string } // pot with >= 2 raises
   | { type: 'win-without-showdown'; count: number; label: string } // bluff-shaped

@@ -172,6 +172,7 @@ interface Orc {
    * hand completion side effects must run exactly once per hand. */
   lastCompletedHand: number
   // run trackers
+  predictionStreak: number
   handsPlayed: number
   handsWon: number
   predictionsCorrect: number
@@ -197,6 +198,7 @@ const orc: Orc = {
   overrideCursor: {},
   awaitingBot: false,
   lastCompletedHand: -1,
+  predictionStreak: 0,
   handsPlayed: 0,
   handsWon: 0,
   predictionsCorrect: 0,
@@ -241,6 +243,7 @@ export function startLevel(levelNumber: number): void {
   orc.coach = { firedIds: [...progress.coachFiredIds] }
   orc.coachQueue = []
   orc.lastCompletedHand = -1
+  orc.predictionStreak = 0
   orc.handsPlayed = 0
   orc.handsWon = 0
   orc.predictionsCorrect = 0
@@ -740,6 +743,7 @@ function trackHeroWinQuests(
       break
     }
     case 'correct-predictions':
+    case 'prediction-streak':
     case 'fold-preflop':
       break // tracked elsewhere
   }
@@ -756,7 +760,13 @@ function gradePrediction(reveals: { playerId: string; rank: HandRank }[]): void 
   const correct = actual === orc.prediction
   if (correct) {
     orc.predictionsCorrect += 1
+    orc.predictionStreak += 1
     if (orc.level.quest.type === 'correct-predictions') orc.questProgress += 1
+    if (orc.level.quest.type === 'prediction-streak') {
+      orc.questProgress = Math.max(orc.questProgress, orc.predictionStreak)
+    }
+  } else {
+    orc.predictionStreak = 0
   }
   set({ predictionResult: { guess: orc.prediction, actual, correct } })
   if (correct) sfx.winSmall()
