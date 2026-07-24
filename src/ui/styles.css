@@ -1288,6 +1288,37 @@ button {
 }
 
 
+/* ---------- footer credits ---------- */
+
+.site-footer {
+  text-align: center;
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  color: rgba(191, 214, 200, 0.4);
+  padding: 2px 16px 8px;
+  z-index: 6;
+  position: relative;
+  direction: ltr; /* the credits line stays English in every locale */
+}
+
+.site-footer .fbrand {
+  font-family: var(--font-display);
+  color: rgba(217, 164, 65, 0.55);
+  letter-spacing: 0.12em;
+}
+
+.site-footer a {
+  color: rgba(217, 164, 65, 0.75);
+  text-decoration: none;
+  border-bottom: 1px dotted rgba(217, 164, 65, 0.35);
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.site-footer a:hover {
+  color: var(--gold-glow);
+  border-bottom-color: var(--gold-glow);
+}
+
 /* misc */
 .fade-scroll::-webkit-scrollbar { width: 10px; }
 .fade-scroll::-webkit-scrollbar-thumb { background: rgba(217, 164, 65, 0.3); border-radius: 6px; }

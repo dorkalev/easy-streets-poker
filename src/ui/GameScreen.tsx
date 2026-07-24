@@ -191,6 +191,16 @@ export function GameScreen() {
       <Table />
       <ActionBar />
 
+      <footer className="site-footer">
+        <span className="fbrand">EASY STREETS</span> · by{' '}
+        <a href="https://dorkalev.com" target="_blank" rel="noopener noreferrer">Dor Kalev</a> · built with{' '}
+        <a href="https://react.dev" target="_blank" rel="noopener noreferrer">React</a>,{' '}
+        <a href="https://github.com/pmndrs/zustand" target="_blank" rel="noopener noreferrer">Zustand</a> &amp;{' '}
+        <a href="https://motion.dev" target="_blank" rel="noopener noreferrer">Motion</a> · type by{' '}
+        <a href="https://fonts.google.com" target="_blank" rel="noopener noreferrer">Google Fonts</a>{' '}
+        (Fraunces, Nunito, Frank Ruhl Libre, Assistant, Amiri, Cairo)
+      </footer>
+
       <StrengthMeter />
       <RankRibbon />
       <StreetBanner />
