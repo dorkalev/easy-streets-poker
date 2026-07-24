@@ -31,10 +31,15 @@
 * { box-sizing: border-box; }
 html, body, #root { height: 100%; margin: 0; }
 
-/* Hebrew: swap in fonts with Hebrew glyphs; Fraunces/Nunito have none. */
-html[dir='rtl'] {
+/* Hebrew/Arabic: swap in fonts with the right glyphs; Fraunces/Nunito have none. */
+html[lang='he'] {
   --font-display: 'Frank Ruhl Libre', 'Fraunces', serif;
   --font-body: 'Assistant', 'Nunito', sans-serif;
+}
+
+html[lang='ar'] {
+  --font-display: 'Amiri', 'Fraunces', serif;
+  --font-body: 'Cairo', 'Nunito', sans-serif;
 }
 
 html[dir='rtl'] .brand-title { font-style: normal; }

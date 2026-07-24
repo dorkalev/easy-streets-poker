@@ -4,7 +4,7 @@ import { useProgress, isLevelUnlocked } from '../app/progress'
 import { getLevel, LEVELS } from '../levels/levels'
 import { HAND_CATEGORY_ORDER } from '../engine/types'
 import { sfx, setSoundEnabled } from '../app/sfx'
-import { L, getLocale, setLocale } from '../i18n'
+import { L, nextLocale, setLocale } from '../i18n'
 import { Table } from './Table'
 import { ActionBar } from './ActionBar'
 import {
@@ -102,7 +102,7 @@ function SettingsCluster() {
       <button
         className="mini-btn lang-btn tip tip-down"
         data-tip={L.settings.langTip}
-        onClick={() => setLocale(getLocale() === 'he' ? 'en' : 'he')}
+        onClick={() => setLocale(nextLocale())}
       >
         {L.settings.langLabel}
       </button>

@@ -76,8 +76,8 @@ export const he: Strings = {
       `מהירות משחק ×${speed} — לחץ לשינוי (×1 ← ×1.5 ← ×2). מאיץ את החלוקה והמחשבה של הבוטים.`,
     resetTip: "אפס הכל והתחל את בית הספר מהתחלה.",
     resetConfirm: "לאפס את כל ההתקדמות?",
-    langTip: "Switch to English — החלף לאנגלית.",
-    langLabel: "EN",
+    langTip: "החלף לערבית — التبديل إلى العربية.",
+    langLabel: "ع",
   },
 
   actions: {
