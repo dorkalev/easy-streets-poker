@@ -11,8 +11,8 @@ function plural(rank: number): string {
 
 export const en = {
   brand: {
-    kicker: '♠ ♥ The Card Parlor ♦ ♣',
-    tableLogo: '✦ The Card Parlor ✦',
+    kicker: '♠ ♥ Easy Streets ♦ ♣',
+    tableLogo: '✦ Easy Streets ✦',
   },
 
   acts: ['Card School', 'Chips on the Line', 'The Board', 'Take Your Seat', 'The Real Game'],

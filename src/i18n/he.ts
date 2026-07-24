@@ -20,8 +20,8 @@ const plur = (r: number) => RANK_HE_PLURAL[r as Rank] ?? String(r)
 
 export const he: Strings = {
   brand: {
-    kicker: "♠ ♥ The Card Parlor ♦ ♣",
-    tableLogo: "✦ The Card Parlor ✦",
+    kicker: "♠ ♥ Easy Streets ♦ ♣",
+    tableLogo: "✦ Easy Streets ✦",
   },
 
   acts: ["בית ספר לקלפים", "צ'יפים על הכף", "הבורד", "תפוס מקום", "המשחק האמיתי"],
