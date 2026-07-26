@@ -126,7 +126,8 @@ button {
   padding: 14px 26px 16px;
   position: relative;
   z-index: 7;
-  background: linear-gradient(180deg, rgba(14, 7, 2, 0.65), rgba(14, 7, 2, 0));
+  /* Opaque enough that nothing (a top seat's avatar) shows through from below. */
+  background: linear-gradient(180deg, #1a0f06 0%, #160c04 72%, rgba(14, 7, 2, 0.92) 100%);
 }
 
 .topbar::after {
@@ -411,15 +412,16 @@ button {
   flex: 1;
   display: grid;
   place-items: center;
-  /* Bottom padding reserves room for the hero's cards, which hang slightly
-     below the felt — they must never reach the action dock's text. */
-  padding: 8px 24px 30px;
+  /* Top padding keeps the top-row seats' avatars clear of the subhud/topbar;
+     bottom padding reserves room for the hero's cards, which hang slightly
+     below the felt. Neither may reach the topbar or the action dock text. */
+  padding: 22px 24px 30px;
 }
 
 .table {
   position: relative;
   width: min(94vw, 980px);
-  height: min(62vh, 560px);
+  height: min(58vh, 540px);
   border-radius: 48% / 52%;
   background:
     radial-gradient(ellipse at 50% 38%, var(--felt-light) 0%, var(--felt) 45%, var(--felt-deep) 100%);
@@ -1367,7 +1369,7 @@ button {
   .progress-pane::before { display: none; }
 }
 
-@media (max-height: 660px) {
+@media (max-height: 760px) {
   /* Short viewports: shrink everything vertically so the action dock and
      footer never fall off the bottom. */
   .card { --card-w: 48px; --card-h: 68px; }
@@ -1380,8 +1382,8 @@ button {
   .brand-title { font-size: 20px; }
   .brand-kicker { margin-bottom: 1px; }
   .subhud { padding: 5px 12px 0; }
-  .table { height: min(52vh, 560px); border-width: 10px; }
-  .table-wrap { padding: 4px 20px 22px; }
+  .table { height: min(50vh, 540px); border-width: 10px; }
+  .table-wrap { padding: 16px 20px 22px; }
   .action-dock { min-height: 92px; padding: 6px 12px 10px; gap: 7px; }
   .btn { padding: 11px 20px; font-size: 14px; }
   .site-footer { display: none; }

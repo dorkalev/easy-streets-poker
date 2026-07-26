@@ -26,6 +26,7 @@ import { getLevel } from '../levels/levels'
 import type { LevelConfig, Quest } from '../levels/types'
 import { sfx, setSoundEnabled } from './sfx'
 import { useProgress } from './progress'
+import { track } from './analytics'
 
 // ---------------------------------------------------------------------------
 // View types
@@ -234,6 +235,7 @@ function clearTimers(): void {
 export function startLevel(levelNumber: number): void {
   clearTimers()
   const level = getLevel(levelNumber)
+  track('level_start', { level: levelNumber, level_title: level.title })
   const progress = useProgress.getState()
   setSoundEnabled(progress.soundOn)
   orc.level = level
@@ -882,6 +884,14 @@ function endLevel(outcome: 'won' | 'lost'): void {
   const questDone = orc.questProgress >= questTarget(level.quest)
   const flawless = outcome === 'won' && questDone && orc.rebuys === 0
   const stars = outcome === 'won' ? 1 + (questDone ? 1 : 0) + (flawless ? 1 : 0) : 0
+
+  track('level_complete', {
+    level: level.levelNumber,
+    level_title: level.title,
+    outcome,
+    stars,
+    quest_done: questDone,
+  })
 
   if (outcome === 'won') {
     useProgress.getState().recordResult(level.levelNumber, {

@@ -13,12 +13,14 @@ interface Pos {
 const HERO_POS: Pos = { x: 50, y: 88 }
 const CENTER: Pos = { x: 50, y: 44 }
 
+// Top-arc y values keep each seat's avatar (which sits on the point, so its
+// top half extends ~29px above the anchor) fully inside the felt.
 const BOT_LAYOUTS: Record<number, Pos[]> = {
-  1: [{ x: 50, y: 11 }],
-  2: [{ x: 24, y: 14 }, { x: 76, y: 14 }],
-  3: [{ x: 13, y: 36 }, { x: 50, y: 9 }, { x: 87, y: 36 }],
-  4: [{ x: 12, y: 44 }, { x: 30, y: 11 }, { x: 70, y: 11 }, { x: 88, y: 44 }],
-  5: [{ x: 10, y: 50 }, { x: 22, y: 14 }, { x: 50, y: 7 }, { x: 78, y: 14 }, { x: 90, y: 50 }],
+  1: [{ x: 50, y: 16 }],
+  2: [{ x: 26, y: 18 }, { x: 74, y: 18 }],
+  3: [{ x: 14, y: 38 }, { x: 50, y: 15 }, { x: 86, y: 38 }],
+  4: [{ x: 13, y: 46 }, { x: 31, y: 16 }, { x: 69, y: 16 }, { x: 87, y: 46 }],
+  5: [{ x: 11, y: 50 }, { x: 24, y: 18 }, { x: 50, y: 14 }, { x: 76, y: 18 }, { x: 89, y: 50 }],
 }
 
 function seatPos(seat: SeatView, botCount: number, botIndex: number): Pos {
@@ -75,7 +77,7 @@ export function Table() {
               pos={pos}
               // Hero vertical position is media-query-tunable (phones pull the
               // hero inside the felt so cards never hang into the dock).
-              topOverride={seat.isHero ? 'var(--hero-y, 88%)' : undefined}
+              topOverride={seat.isHero ? 'var(--hero-y, 85%)' : undefined}
               stoplight={seat.isHero ? stoplight : null}
             />
           )
