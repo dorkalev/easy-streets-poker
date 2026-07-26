@@ -852,8 +852,10 @@ button {
 
 .strength-meter {
   position: absolute;
-  left: 20px;
-  bottom: 130px;
+  /* Bottom-right: the rank ribbon (L1–3) and the meter (L4+) never coexist,
+     and the coach bubble lives bottom-left — no more collisions. */
+  right: 16px;
+  bottom: 138px;
   width: 168px;
   background: rgba(0, 0, 0, 0.45);
   border: 1px solid rgba(217, 164, 65, 0.3);
@@ -1055,13 +1057,14 @@ button {
 /* penny coach */
 .coach {
   position: absolute;
-  left: 18px;
-  bottom: 18px;
+  left: 16px;
+  /* Above the action dock + footer: Penny must never cover the controls. */
+  bottom: 138px;
   z-index: 22;
   display: flex;
   align-items: flex-end;
   gap: 10px;
-  max-width: 430px;
+  max-width: 400px;
 }
 
 .coach-avatar {
@@ -1328,21 +1331,89 @@ button {
 .fade-scroll::-webkit-scrollbar-track { background: transparent; }
 
 @media (max-height: 660px) {
-  /* Short viewports: shrink cards and avatars so the hero seat never
-     crowds the pot in the table center. */
+  /* Short viewports: shrink everything vertically so the action dock and
+     footer never fall off the bottom. */
   .card { --card-w: 48px; --card-h: 68px; }
   .card.small { --card-w: 34px; --card-h: 48px; }
   .avatar { width: 46px; height: 46px; font-size: 24px; }
   .seat.hero .avatar { width: 40px; height: 40px; font-size: 21px; }
   .community { min-height: 68px; }
   .seat-cards { min-height: 4px; }
+  .topbar { padding: 8px 18px 8px; gap: 16px; }
+  .brand-title { font-size: 20px; }
+  .brand-kicker { margin-bottom: 1px; }
+  .subhud { padding: 5px 12px 0; }
+  .table { height: min(52vh, 560px); border-width: 10px; }
+  .table-wrap { padding: 4px 20px 0; }
+  .action-dock { min-height: 92px; padding: 6px 12px 10px; gap: 7px; }
+  .btn { padding: 11px 20px; font-size: 14px; }
+  .site-footer { display: none; }
+  .coach { bottom: 108px; }
+  .strength-meter { bottom: 108px; }
 }
 
 @media (max-width: 720px) {
-  .card { --card-w: 46px; --card-h: 66px; }
-  .card.small { --card-w: 32px; --card-h: 46px; }
-  .strength-meter { left: 10px; bottom: 120px; width: 140px; }
-  .rank-ribbon { display: none; }
-  .seat { width: 120px; }
-  .street-banner { font-size: 36px; }
+  /* Phone layout: brand row on top, journey rail on its own wrapped line,
+     compact pills, smaller table furniture, stacked dock. */
+  .topbar { flex-wrap: wrap; gap: 8px; padding: 8px 12px 10px; align-items: flex-start; }
+  .brand { min-width: 0; flex: 1; }
+  .brand-kicker { font-size: 8.5px; letter-spacing: 0.22em; }
+  .brand-title { font-size: 19px; }
+  .brand-meta { font-size: 9.5px; letter-spacing: 0.08em; }
+  .settings-cluster { gap: 5px; }
+  .mini-btn { width: 30px; height: 30px; font-size: 13px; }
+  .journey { order: 3; flex-basis: 100%; }
+  .progress-pane { flex-wrap: wrap; gap: 5px; padding: 4px 2px; justify-content: center; }
+  .progress-pane::before { display: none; }
+  .act-tick { display: none; }
+  .lnode { width: 22px; height: 22px; font-size: 10px; }
+  .lnode.current { width: 28px; height: 28px; font-size: 12px; }
+  .lnode.locked { width: 18px; height: 18px; font-size: 8.5px; }
+  .lnode-stars { display: none; }
+
+  .subhud { flex-wrap: wrap; gap: 6px; padding: 6px 10px 0; }
+  .hud-pill { font-size: 10.5px; padding: 4px 10px; white-space: normal; text-align: center; }
+
+  .table { width: 96vw; height: min(56vh, 115vw); border-width: 9px; }
+  .table-wrap { padding: 14px 8px 0; }
+  .card { --card-w: 44px; --card-h: 62px; }
+  .card.small { --card-w: 30px; --card-h: 43px; }
+  .community { min-height: 62px; gap: 5px; }
+  .seat { width: 96px; }
+  .avatar { width: 44px; height: 44px; font-size: 22px; }
+  .seat.hero .avatar { width: 38px; height: 38px; font-size: 19px; }
+  .seat-name { font-size: 10px; padding: 1px 8px; }
+  .seat-stack { font-size: 11px; }
+  .bubble { max-width: 150px; font-size: 11px; min-width: 100px; }
+
+  .strength-meter { right: 8px; bottom: 112px; width: 124px; padding: 7px 9px; }
+  .rank-ribbon { right: 6px; padding: 5px 4px; }
+  .ribbon-rank { width: 20px; height: 13px; font-size: 9px; }
+  .street-banner { font-size: 34px; }
+
+  .action-dock { min-height: 96px; padding: 6px 8px 12px; gap: 7px; }
+  .action-row { gap: 8px; }
+  .btn { font-size: 13.5px; padding: 11px 16px; border-radius: 13px; }
+  .btn-stay { font-size: 16px; padding: 13px 28px; }
+  .btn-predict { font-size: 13px; padding: 12px 14px; }
+  .predict-title { font-size: 15px; padding: 0 8px; text-align: center; }
+  .predict-help { font-size: 11px; padding: 0 10px; }
+  .bet-slider-row { flex-wrap: wrap; justify-content: center; padding: 6px 10px; gap: 8px; }
+  .bet-slider-row input[type='range'] { width: 150px; }
+
+  /* Phones: Penny docks at the TOP of the felt — she may briefly cover the
+     bots, but never the player's own cards or the action buttons. */
+  .coach { left: 8px; right: 8px; max-width: none; bottom: auto; top: 21vh; align-items: flex-start; }
+  .coach-avatar { width: 42px; height: 42px; font-size: 21px; }
+  .coach-card { font-size: 12.5px; padding: 10px 12px; border-radius: 4px 16px 16px 16px; }
+
+  .site-footer { font-size: 8.5px; padding: 0 10px 6px; }
+  .predict-toast { padding: 12px 18px 10px; width: max-content; max-width: 88vw; }
+  .predict-toast .big { font-size: 26px; }
+  .predict-toast .why { font-size: 11.5px; }
+  .celebrate-word { font-size: 34px; }
+  .newrule { padding: 24px 20px 22px; }
+  .newrule h2 { font-size: 26px; }
+  .newrule li { font-size: 13.5px; }
+  .level-end { padding: 26px 20px 22px; }
 }

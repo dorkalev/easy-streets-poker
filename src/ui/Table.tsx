@@ -14,11 +14,11 @@ const HERO_POS: Pos = { x: 50, y: 88 }
 const CENTER: Pos = { x: 50, y: 44 }
 
 const BOT_LAYOUTS: Record<number, Pos[]> = {
-  1: [{ x: 50, y: 8 }],
-  2: [{ x: 24, y: 12 }, { x: 76, y: 12 }],
-  3: [{ x: 13, y: 34 }, { x: 50, y: 6 }, { x: 87, y: 34 }],
-  4: [{ x: 10, y: 42 }, { x: 30, y: 8 }, { x: 70, y: 8 }, { x: 90, y: 42 }],
-  5: [{ x: 8, y: 48 }, { x: 22, y: 12 }, { x: 50, y: 4 }, { x: 78, y: 12 }, { x: 92, y: 48 }],
+  1: [{ x: 50, y: 11 }],
+  2: [{ x: 24, y: 14 }, { x: 76, y: 14 }],
+  3: [{ x: 13, y: 36 }, { x: 50, y: 9 }, { x: 87, y: 36 }],
+  4: [{ x: 12, y: 44 }, { x: 30, y: 11 }, { x: 70, y: 11 }, { x: 88, y: 44 }],
+  5: [{ x: 10, y: 50 }, { x: 22, y: 14 }, { x: 50, y: 7 }, { x: 78, y: 14 }, { x: 90, y: 50 }],
 }
 
 function seatPos(seat: SeatView, botCount: number, botIndex: number): Pos {
