@@ -74,6 +74,13 @@ function SettingsCluster() {
 
   return (
     <div className="settings-cluster">
+      <button
+        className="mini-btn tip tip-down"
+        data-tip={L.intro.reopenTip}
+        onClick={() => progress.setSeenIntro(false)}
+      >
+        ?
+      </button>
       <button className="mini-btn tip tip-down" data-tip={L.settings.codexTip} onClick={() => setCodexOpen((o) => !o)}>
         📖
       </button>

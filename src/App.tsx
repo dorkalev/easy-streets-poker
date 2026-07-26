@@ -1,11 +1,14 @@
 import { useEffect } from 'react'
+import { AnimatePresence } from 'motion/react'
 import { useGame, startLevel } from './app/game'
 import { useProgress } from './app/progress'
 import { LEVELS } from './levels/levels'
 import { GameScreen } from './ui/GameScreen'
+import { IntroSplash } from './ui/IntroSplash'
 
 export default function App() {
   const levelNumber = useGame((g) => g.levelNumber)
+  const seenIntro = useProgress((s) => s.seenIntro)
 
   // Linear flow: boot straight into the first level not yet completed.
   useEffect(() => {
@@ -18,6 +21,7 @@ export default function App() {
   return (
     <div className="app">
       {levelNumber !== null && <GameScreen />}
+      <AnimatePresence>{!seenIntro && <IntroSplash />}</AnimatePresence>
       <div className="vignette" />
     </div>
   )

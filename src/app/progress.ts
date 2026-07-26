@@ -13,11 +13,13 @@ interface ProgressState {
   /** Hand Codex: categories the hero has made, in any level. */
   codexMade: HandCategory[]
   coachFiredIds: string[]
+  seenIntro: boolean
   soundOn: boolean
   speed: 1 | 1.5 | 2
   recordResult: (levelNumber: number, result: LevelResult) => void
   recordCodex: (category: HandCategory) => void
   setCoachFired: (ids: string[]) => void
+  setSeenIntro: (seen: boolean) => void
   setSoundOn: (on: boolean) => void
   setSpeed: (speed: 1 | 1.5 | 2) => void
   resetAll: () => void
@@ -29,6 +31,7 @@ export const useProgress = create<ProgressState>()(
       levels: {},
       codexMade: [],
       coachFiredIds: [],
+      seenIntro: false,
       soundOn: true,
       speed: 1,
       recordResult: (levelNumber, result) => {
@@ -49,6 +52,7 @@ export const useProgress = create<ProgressState>()(
         set({ codexMade: [...get().codexMade, category] })
       },
       setCoachFired: (ids) => set({ coachFiredIds: ids }),
+      setSeenIntro: (seen) => set({ seenIntro: seen }),
       setSoundOn: (on) => set({ soundOn: on }),
       setSpeed: (speed) => set({ speed }),
       resetAll: () => set({ levels: {}, codexMade: [], coachFiredIds: [] }),

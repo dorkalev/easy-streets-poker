@@ -17,6 +17,16 @@ export const en = {
 
   acts: ['Card School', 'Chips on the Line', 'The Board', 'Take Your Seat', 'The Real Game'],
 
+  intro: {
+    kicker: 'A poker school — not a casino',
+    title: 'Learn poker by playing it.',
+    body: "No rules to memorize, no deep end. You start with ONE card — higher wins — and climb one tiny new rule at a time, all the way up to full No-Limit Hold'em. By the end you know the whole game and barely noticed you learned it.",
+    steps: ['1 card', 'a pair', 'the board', 'betting', 'the real game'],
+    cta: 'Start from the very bottom',
+    foot: '18 bite-size levels · 6 rival characters · free · no sign-up',
+    reopenTip: 'How Easy Streets works',
+  },
+
   hud: {
     meta: (level: number, hand: number, blinds: { small: number; big: number } | null) =>
       `Level ${level} · Hand ${hand}${blinds ? ` · Blinds ${blinds.small}/${blinds.big}` : ''}`,
