@@ -119,6 +119,7 @@ button {
 .topbar {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 26px;
   padding: 14px 26px 16px;
   position: relative;
@@ -170,10 +171,11 @@ button {
 /* --- the journey rail: 17 poker chips on a brass track --- */
 
 .journey {
-  flex: 1;
+  flex: 1 1 auto;
   display: flex;
   justify-content: center;
   min-width: 0;
+  overflow: hidden; /* never paint chips under the settings buttons */
 }
 
 .progress-pane {
@@ -402,7 +404,9 @@ button {
   flex: 1;
   display: grid;
   place-items: center;
-  padding: 8px 24px 0;
+  /* Bottom padding reserves room for the hero's cards, which hang slightly
+     below the felt — they must never reach the action dock's text. */
+  padding: 8px 24px 30px;
 }
 
 .table {
@@ -1330,6 +1334,26 @@ button {
 .fade-scroll::-webkit-scrollbar-thumb { background: rgba(217, 164, 65, 0.3); border-radius: 6px; }
 .fade-scroll::-webkit-scrollbar-track { background: transparent; }
 
+/* Mid-width windows: shrink the journey chips before anything can collide. */
+@media (max-width: 1200px) {
+  .lnode { width: 22px; height: 22px; font-size: 10px; }
+  .lnode.current { width: 29px; height: 29px; font-size: 12px; }
+  .lnode.locked { width: 18px; height: 18px; font-size: 8.5px; }
+  .progress-pane { gap: 4px; padding: 10px 8px; }
+  .act-tick { margin: 0 1px; font-size: 10px; }
+  .brand { min-width: 175px; }
+  .brand-title { font-size: 21px; }
+  .mini-btn { width: 31px; height: 31px; font-size: 13px; }
+}
+
+/* Narrow windows: the journey rail moves to its own full-width row. */
+@media (max-width: 980px) {
+  .journey { order: 3; flex-basis: 100%; }
+  .topbar { gap: 8px; padding-bottom: 8px; }
+  .progress-pane { flex-wrap: wrap; padding: 4px 2px; }
+  .progress-pane::before { display: none; }
+}
+
 @media (max-height: 660px) {
   /* Short viewports: shrink everything vertically so the action dock and
      footer never fall off the bottom. */
@@ -1344,7 +1368,7 @@ button {
   .brand-kicker { margin-bottom: 1px; }
   .subhud { padding: 5px 12px 0; }
   .table { height: min(52vh, 560px); border-width: 10px; }
-  .table-wrap { padding: 4px 20px 0; }
+  .table-wrap { padding: 4px 20px 22px; }
   .action-dock { min-height: 92px; padding: 6px 12px 10px; gap: 7px; }
   .btn { padding: 11px 20px; font-size: 14px; }
   .site-footer { display: none; }
