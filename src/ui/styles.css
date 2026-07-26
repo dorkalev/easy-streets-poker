@@ -64,6 +64,8 @@ button {
   cursor: pointer;
   background: none;
   color: inherit;
+  padding: 0; /* UA button padding skews grid-centered content (journey chips) */
+  line-height: inherit;
 }
 
 /* ---------- app shell + atmosphere ----------
@@ -259,7 +261,12 @@ button {
   font-size: 9.5px;
 }
 
-.lnode-num { line-height: 1; position: relative; z-index: 1; }
+.lnode-num {
+  line-height: 1;
+  position: relative;
+  z-index: 1;
+  letter-spacing: 0; /* inherited tracking pushes tiny digits off-center */
+}
 
 .lnode-stars {
   position: absolute;
@@ -943,9 +950,15 @@ button {
   background: rgba(4, 18, 12, 0.78);
   backdrop-filter: blur(3px);
   z-index: 20;
-  display: grid;
-  place-items: center;
+  /* flex + margin:auto on the card: centers when it fits, scrolls without
+     clipping the top when the modal is taller than the window */
+  display: flex;
+  overflow-y: auto;
   padding: 20px;
+}
+
+.overlay-dim > * {
+  margin: auto;
 }
 
 /* new rule banner */
