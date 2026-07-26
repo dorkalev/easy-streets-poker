@@ -73,6 +73,9 @@ export function Table() {
               key={seat.playerId}
               seat={seat}
               pos={pos}
+              // Hero vertical position is media-query-tunable (phones pull the
+              // hero inside the felt so cards never hang into the dock).
+              topOverride={seat.isHero ? 'var(--hero-y, 88%)' : undefined}
               stoplight={seat.isHero ? stoplight : null}
             />
           )
@@ -101,7 +104,17 @@ export function Table() {
   )
 }
 
-function Seat({ seat, pos, stoplight }: { seat: SeatView; pos: Pos; stoplight: 'green' | 'yellow' | 'red' | null }) {
+function Seat({
+  seat,
+  pos,
+  stoplight,
+  topOverride,
+}: {
+  seat: SeatView
+  pos: Pos
+  stoplight: 'green' | 'yellow' | 'red' | null
+  topOverride?: string
+}) {
   const classes = [
     'seat',
     seat.isHero ? 'hero' : '',
@@ -118,7 +131,7 @@ function Seat({ seat, pos, stoplight }: { seat: SeatView; pos: Pos; stoplight: '
   const showFace = (seat.isHero || seat.revealed) && seat.cards.length > 0 && seat.status !== 'folded'
 
   return (
-    <div className={classes} style={{ left: `${pos.x}%`, top: `${pos.y}%` }}>
+    <div className={classes} style={{ left: `${pos.x}%`, top: topOverride ?? `${pos.y}%` }}>
       <AnimatePresence>
         {seat.speech && (
           <motion.div

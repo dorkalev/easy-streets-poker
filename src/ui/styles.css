@@ -1354,7 +1354,13 @@ button {
 
 @media (max-width: 720px) {
   /* Phone layout: brand row on top, journey rail on its own wrapped line,
-     compact pills, smaller table furniture, stacked dock. */
+     compact pills, smaller table furniture, stacked dock. If everything
+     still doesn't fit (iPhone SE), the page scrolls instead of clipping. */
+  body { overflow-y: auto; }
+  .app { height: auto; min-height: 100dvh; }
+  .game { height: auto; min-height: 100dvh; }
+  .table-wrap { flex: none; }
+
   .topbar { flex-wrap: wrap; gap: 8px; padding: 8px 12px 10px; align-items: flex-start; }
   .brand { min-width: 0; flex: 1; }
   .brand-kicker { font-size: 8.5px; letter-spacing: 0.22em; }
@@ -1374,8 +1380,8 @@ button {
   .subhud { flex-wrap: wrap; gap: 6px; padding: 6px 10px 0; }
   .hud-pill { font-size: 10.5px; padding: 4px 10px; white-space: normal; text-align: center; }
 
-  .table { width: 96vw; height: min(56vh, 115vw); border-width: 9px; }
-  .table-wrap { padding: 14px 8px 0; }
+  .table { width: 96vw; height: min(44dvh, 102vw); border-width: 9px; --hero-y: 80%; }
+  .table-wrap { padding: 12px 8px 0; }
   .card { --card-w: 44px; --card-h: 62px; }
   .card.small { --card-w: 30px; --card-h: 43px; }
   .community { min-height: 62px; gap: 5px; }
@@ -1391,13 +1397,13 @@ button {
   .ribbon-rank { width: 20px; height: 13px; font-size: 9px; }
   .street-banner { font-size: 34px; }
 
-  .action-dock { min-height: 96px; padding: 6px 8px 12px; gap: 7px; }
-  .action-row { gap: 8px; }
+  .action-dock { min-height: 88px; padding: 6px 6px 10px; gap: 6px; }
+  .action-row { gap: 6px; }
   .btn { font-size: 13.5px; padding: 11px 16px; border-radius: 13px; }
   .btn-stay { font-size: 16px; padding: 13px 28px; }
-  .btn-predict { font-size: 13px; padding: 12px 14px; }
-  .predict-title { font-size: 15px; padding: 0 8px; text-align: center; }
-  .predict-help { font-size: 11px; padding: 0 10px; }
+  .btn-predict { font-size: 11.5px; padding: 11px 10px; letter-spacing: 0.01em; }
+  .predict-title { font-size: 14px; padding: 0 8px; text-align: center; }
+  .predict-help { font-size: 10.5px; padding: 0 10px; }
   .bet-slider-row { flex-wrap: wrap; justify-content: center; padding: 6px 10px; gap: 8px; }
   .bet-slider-row input[type='range'] { width: 150px; }
 
