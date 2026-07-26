@@ -33,7 +33,7 @@ export function NewRuleBanner() {
             transition={{ type: 'spring', stiffness: 300, damping: 24 }}
           >
             <div className="newrule-tag">
-              {level.levelNumber === 17 ? L.newRule.finalTag : L.newRule.tag(level.newRules.length)}
+              {level.levelNumber === LEVELS.length ? L.newRule.finalTag : L.newRule.tag(level.newRules.length)}
             </div>
             <h2>{level.title}</h2>
             <div className="sub">{L.newRule.levelOf(level.levelNumber, level.actName)}</div>

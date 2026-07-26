@@ -53,7 +53,24 @@ export const useProgress = create<ProgressState>()(
       setSpeed: (speed) => set({ speed }),
       resetAll: () => set({ levels: {}, codexMade: [], coachFiredIds: [] }),
     }),
-    { name: 'poker-tutor/v1' },
+    {
+      name: 'poker-tutor/v1',
+      version: 1,
+      // v0 → v1: level 11 was split into 11 + 12, shifting old levels 12–17
+      // to 13–18. Remap saved completions so nobody loses progress.
+      migrate: (persisted, version) => {
+        const state = persisted as Partial<ProgressState>
+        if (version === 0 && state.levels) {
+          const remapped: Record<number, LevelResult> = {}
+          for (const [key, result] of Object.entries(state.levels)) {
+            const n = Number(key)
+            remapped[n >= 12 ? n + 1 : n] = result
+          }
+          state.levels = remapped
+        }
+        return state as ProgressState
+      },
+    },
   ),
 )
 

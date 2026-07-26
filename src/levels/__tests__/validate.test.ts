@@ -6,8 +6,8 @@ import { parseCard } from '../../engine/deck'
 import type { GameState } from '../../engine/types'
 
 describe('level configs', () => {
-  it('has 17 levels, numbered consecutively across 5 acts', () => {
-    expect(LEVELS).toHaveLength(17)
+  it('has 18 levels, numbered consecutively across 5 acts', () => {
+    expect(LEVELS).toHaveLength(18)
     LEVELS.forEach((l, i) => expect(l.levelNumber).toBe(i + 1))
     expect(new Set(LEVELS.map((l) => l.act))).toEqual(new Set([1, 2, 3, 4, 5]))
   })

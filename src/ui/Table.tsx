@@ -10,8 +10,8 @@ interface Pos {
   y: number
 }
 
-const HERO_POS: Pos = { x: 50, y: 86 }
-const CENTER: Pos = { x: 50, y: 47 }
+const HERO_POS: Pos = { x: 50, y: 88 }
+const CENTER: Pos = { x: 50, y: 44 }
 
 const BOT_LAYOUTS: Record<number, Pos[]> = {
   1: [{ x: 50, y: 8 }],

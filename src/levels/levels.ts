@@ -390,15 +390,14 @@ const L11: LevelConfig = {
   newRules: [
     'BLINDS replace the ante: small blind and big blind, posted left of the dealer BUTTON.',
     'The button moves every hand — everyone takes turns paying.',
-    'Most starting hands belong in the muck. Fold them.',
   ],
   intro: 'Real table rules now. See those blinds? They\'re not a tax — they\'re a bounty.',
   botIds: ['callie', 'gary'],
   handsToComplete: 12,
-  winCondition: { type: 'profit', afterHands: 12 },
-  quest: { type: 'steal-blinds', count: 2, label: 'Steal the blinds twice (raise, everyone folds)' },
-  ui: { ...UI_OFF, showHandStrengthMeter: true, stoplight: true, botsThinkOutLoud: true },
-  difficulty: 2,
+  winCondition: { type: 'hands-won', target: 3 },
+  quest: { type: 'steal-blinds', count: 1, label: 'Steal the blinds once (raise, everyone folds)' },
+  ui: { ...UI_OFF, showHandStrengthMeter: true, showActionHints: true, botsThinkOutLoud: true },
+  difficulty: 1,
   rebuys: true,
   rules: {
     id: 'L11',
@@ -413,8 +412,39 @@ const L11: LevelConfig = {
   },
 }
 
-const L12: LevelConfig = {
+const L11B: LevelConfig = {
   levelNumber: 12,
+  act: 4,
+  actName: 'Take Your Seat',
+  title: 'Tight Is Right',
+  subtitle: 'Most hands belong in the muck.',
+  newRules: [
+    'Most starting hands are trash — the stoplight on your cards shows which are worth playing.',
+    'Folding is no longer free: the blinds bleed you while you wait. Steal them back with raises.',
+  ],
+  intro: 'You know the blinds. Now the discipline: play few hands, play them hard — and rob the blinds while everyone else waits for aces.',
+  botIds: ['callie', 'gary'],
+  handsToComplete: 12,
+  winCondition: { type: 'profit', afterHands: 12 },
+  quest: { type: 'steal-blinds', count: 2, label: 'Steal the blinds twice (raise, everyone folds)' },
+  ui: { ...UI_OFF, showHandStrengthMeter: true, stoplight: true, botsThinkOutLoud: true },
+  difficulty: 2,
+  rebuys: true,
+  rules: {
+    id: 'L11B',
+    numPlayers: 3,
+    holeCards: 2,
+    streets: FULL_STREETS.map((s) => (s.name === 'turn' || s.name === 'river' ? { ...s, betSize: 20 } : s)),
+    enabledHands: hands('straight-flush'),
+    handSize: 5,
+    kickersMatter: true,
+    betting: { mode: 'fixed', fixedBet: 10, maxRaisesPerRound: 3, blinds: { small: 5, big: 10 } },
+    startingStack: 300,
+  },
+}
+
+const L12: LevelConfig = {
+  levelNumber: 13,
   act: 4,
   actName: 'Take Your Seat',
   title: 'Seat of Power',
@@ -445,7 +475,7 @@ const L12: LevelConfig = {
 }
 
 const L13: LevelConfig = {
-  levelNumber: 13,
+  levelNumber: 14,
   act: 4,
   actName: 'Take Your Seat',
   title: 'The Price Is Right',
@@ -481,7 +511,7 @@ const L13: LevelConfig = {
 // ---------------------------------------------------------------------------
 
 const L14: LevelConfig = {
-  levelNumber: 14,
+  levelNumber: 15,
   act: 5,
   actName: 'The Real Game',
   title: 'Stone Cold',
@@ -512,7 +542,7 @@ const L14: LevelConfig = {
 }
 
 const L15: LevelConfig = {
-  levelNumber: 15,
+  levelNumber: 16,
   act: 5,
   actName: 'The Real Game',
   title: 'Shove & Survive',
@@ -539,13 +569,13 @@ const L15: LevelConfig = {
     handSize: 5,
     kickersMatter: true,
     betting: { mode: 'no-limit', blinds: { small: 5, big: 10 } },
-    startingStack: 250,
-    blindSchedule: { everyHands: 5, factor: 2 },
+    startingStack: 300,
+    blindSchedule: { everyHands: 6, factor: 2 },
   },
 }
 
 const L16: LevelConfig = {
-  levelNumber: 16,
+  levelNumber: 17,
   act: 5,
   actName: 'The Real Game',
   title: 'Kicker Karma',
@@ -577,7 +607,7 @@ const L16: LevelConfig = {
 }
 
 const L17: LevelConfig = {
-  levelNumber: 17,
+  levelNumber: 18,
   act: 5,
   actName: 'The Real Game',
   title: 'The Main Event',
@@ -606,7 +636,7 @@ const L17: LevelConfig = {
 }
 
 export const LEVELS: LevelConfig[] = [
-  L01, L02, L03, L04, L05, L06, L07, L08, L09, L10, L11, L12, L13, L14, L15, L16, L17,
+  L01, L02, L03, L04, L05, L06, L07, L08, L09, L10, L11, L11B, L12, L13, L14, L15, L16, L17,
 ]
 
 // Localize all display copy from the active locale's dictionary. The literals

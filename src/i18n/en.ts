@@ -366,9 +366,18 @@ export const en = {
       newRules: [
         'BLINDS replace the ante: small blind and big blind, posted left of the dealer BUTTON.',
         'The button moves every hand — everyone takes turns paying.',
-        'Most starting hands belong in the muck. Fold them.',
       ],
       intro: "Real table rules now. See those blinds? They're not a tax — they're a bounty.",
+      quest: 'Steal the blinds once (raise, everyone folds)',
+    },
+    L11B: {
+      title: 'Tight Is Right',
+      subtitle: 'Most hands belong in the muck.',
+      newRules: [
+        'Most starting hands are trash — the stoplight on your cards shows which are worth playing.',
+        'Folding is no longer free: the blinds bleed you while you wait. Steal them back with raises.',
+      ],
+      intro: 'You know the blinds. Now the discipline: play few hands, play them hard — and rob the blinds while everyone else waits for aces.',
       quest: 'Steal the blinds twice (raise, everyone folds)',
     },
     L12: {
@@ -407,7 +416,7 @@ export const en = {
       newRules: [
         "ALL-IN: bet your whole stack. If you're covered, your tournament is on the line.",
         'SIDE POTS: an all-in player can only win chips they matched — the rest goes in a side pot.',
-        'Blinds DOUBLE every 5 hands. Waiting is dying.',
+        'Blinds DOUBLE every 6 hands. Waiting is dying.',
       ],
       intro: 'A real tournament ticket. You can actually lose this one — so make your chips count.',
       quest: 'Win 2 pots someone raised',

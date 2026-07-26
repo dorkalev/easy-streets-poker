@@ -620,13 +620,16 @@ button {
 
 .center {
   position: absolute;
-  top: 47%;
+  top: 44%;
   left: 50%;
   transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 12px;
+  /* Above the seats: animated avatars form composite layers that would
+     otherwise paint over the pot on short viewports. */
+  z-index: 2;
 }
 
 .community { display: flex; gap: 8px; min-height: var(--card-h, 84px); }
@@ -1323,6 +1326,17 @@ button {
 .fade-scroll::-webkit-scrollbar { width: 10px; }
 .fade-scroll::-webkit-scrollbar-thumb { background: rgba(217, 164, 65, 0.3); border-radius: 6px; }
 .fade-scroll::-webkit-scrollbar-track { background: transparent; }
+
+@media (max-height: 660px) {
+  /* Short viewports: shrink cards and avatars so the hero seat never
+     crowds the pot in the table center. */
+  .card { --card-w: 48px; --card-h: 68px; }
+  .card.small { --card-w: 34px; --card-h: 48px; }
+  .avatar { width: 46px; height: 46px; font-size: 24px; }
+  .seat.hero .avatar { width: 40px; height: 40px; font-size: 21px; }
+  .community { min-height: 68px; }
+  .seat-cards { min-height: 4px; }
+}
 
 @media (max-width: 720px) {
   .card { --card-w: 46px; --card-h: 66px; }
