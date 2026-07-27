@@ -332,11 +332,20 @@ button {
 
 /* mode toggle: a labeled pill, more prominent than the round mini-btns */
 .mode-btn {
+  /* override the round mini-btn grid so icon + label sit on one row */
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+  white-space: nowrap;
   width: auto;
+  height: 36px;
   border-radius: 999px;
-  padding: 0 13px;
+  padding: 0 14px;
   gap: 6px;
   font-size: 14px;
+  line-height: 1;
   background: rgba(217, 164, 65, 0.14);
   border-color: rgba(217, 164, 65, 0.5);
 }
@@ -346,6 +355,8 @@ button {
   font-weight: 800;
   letter-spacing: 0.04em;
   color: var(--gold-glow);
+  white-space: nowrap;
+  line-height: 1;
 }
 .mode-btn:hover { background: rgba(217, 164, 65, 0.24); }
 
@@ -1667,6 +1678,7 @@ html[dir='rtl'] .stair-arrow { transform: translateX(-50%) scaleX(-1); }
   .brand { min-width: 175px; }
   .brand-title { font-size: 21px; }
   .mini-btn { width: 31px; height: 31px; font-size: 13px; }
+  .mode-btn { width: auto; height: 31px; padding: 0 12px; }
 }
 
 /* Narrow windows: the journey rail moves to its own full-width row. */
@@ -1715,7 +1727,7 @@ html[dir='rtl'] .stair-arrow { transform: translateX(-50%) scaleX(-1); }
   .brand-meta { font-size: 9.5px; letter-spacing: 0.08em; }
   .settings-cluster { gap: 5px; }
   .mini-btn { width: 30px; height: 30px; font-size: 13px; }
-  .mode-btn { width: auto; padding: 0 9px; }
+  .mode-btn { width: auto; height: 30px; padding: 0 9px; }
   .mode-btn .mode-label { display: none; } /* icon-only on phones */
   .journey { order: 3; flex-basis: 100%; }
   .progress-pane { flex-wrap: wrap; gap: 5px; padding: 4px 2px; justify-content: center; }
