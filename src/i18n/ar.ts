@@ -37,6 +37,8 @@ export const ar: Strings = {
   credits: {
     footBy: "بواسطة",
     footLink: "الاعتمادات والتراخيص",
+    github: "GitHub",
+    source: "عرض المصدر على GitHub",
     tip: "الاعتمادات والتراخيص",
     title: "الاعتمادات والتراخيص",
     mit: "Easy Streets مجاني ومفتوح المصدر تحت رخصة MIT.",

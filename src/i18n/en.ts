@@ -30,6 +30,8 @@ export const en = {
   credits: {
     footBy: 'by',
     footLink: 'Credits & licenses',
+    github: 'GitHub',
+    source: 'View source on GitHub',
     tip: 'Credits & licenses',
     title: 'Credits & Licenses',
     mit: 'Easy Streets is free and open source under the MIT license.',

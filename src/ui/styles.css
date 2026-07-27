@@ -1559,7 +1559,24 @@ html[dir='rtl'] .stair-arrow { transform: translateX(-50%) scaleX(-1); }
   margin: 0 0 10px;
 }
 
-.credits-mit { font-size: 14px; color: #cfe3d7; margin: 0 0 16px; line-height: 1.5; }
+.credits-mit { font-size: 14px; color: #cfe3d7; margin: 0 0 14px; line-height: 1.5; }
+
+.credits-source {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--ink) !important;
+  background: linear-gradient(180deg, var(--brass-bright), var(--brass));
+  border: none !important;
+  border-radius: 999px;
+  padding: 8px 18px;
+  margin-bottom: 16px;
+  transition: filter 0.15s;
+}
+.credits-source:hover { filter: brightness(1.08); }
+.credits-source .gh-mark { display: inline-flex; }
 
 .credits-by { font-size: 15px; color: var(--cream); margin-bottom: 18px; }
 

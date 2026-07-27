@@ -39,6 +39,8 @@ export const he: Strings = {
   credits: {
     footBy: "מאת",
     footLink: "קרדיטים ורישיונות",
+    github: "GitHub",
+    source: "צפייה בקוד ב-GitHub",
     tip: "קרדיטים ורישיונות",
     title: "קרדיטים ורישיונות",
     mit: "Easy Streets הוא חינמי וקוד פתוח תחת רישיון MIT.",
