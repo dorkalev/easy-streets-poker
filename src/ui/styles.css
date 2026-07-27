@@ -1737,16 +1737,18 @@ html[dir='rtl'] .stair-arrow { transform: translateX(-50%) scaleX(-1); }
   .game { height: auto; min-height: 100dvh; }
   .table-wrap { flex: none; }
 
-  .topbar { flex-wrap: wrap; gap: 8px; padding: 8px 12px 10px; align-items: flex-start; }
-  .brand { min-width: 0; flex: 1; }
+  /* Phone header stacks vertically: brand (full-width, single-line title),
+     then the buttons, then the journey rail — each centered. */
+  .topbar { flex-direction: column; align-items: center; gap: 7px; padding: 8px 12px 8px; }
+  .brand { min-width: 0; flex: none; order: 1; text-align: center; }
   .brand-kicker { font-size: 8.5px; letter-spacing: 0.22em; }
-  .brand-title { font-size: 19px; }
-  .brand-meta { font-size: 9.5px; letter-spacing: 0.08em; }
-  .settings-cluster { gap: 5px; }
+  .brand-title { font-size: 22px; white-space: nowrap; }
+  .brand-meta { font-size: 10px; letter-spacing: 0.08em; }
+  .settings-cluster { order: 2; gap: 6px; flex-wrap: wrap; justify-content: center; }
   .mini-btn { width: 30px; height: 30px; font-size: 13px; }
   .mode-btn { width: auto; height: 30px; padding: 0 9px; }
-  .mode-btn .mode-label { display: none; } /* icon-only on phones */
-  .journey { order: 3; flex-basis: 100%; }
+  .mode-btn .mode-label { display: none; } /* icon-only to keep buttons on one row */
+  .journey { order: 3; width: 100%; }
   .progress-pane { flex-wrap: wrap; gap: 5px; padding: 4px 2px; justify-content: center; }
   .progress-pane::before { display: none; }
   .act-tick { display: none; }
