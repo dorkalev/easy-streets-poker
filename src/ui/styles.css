@@ -1373,6 +1373,40 @@ button {
   border-left-color: #fdf8ea;
 }
 
+/* ---- Viewport-edge safety: never let a tooltip spill off-screen ---- */
+
+/* Touch devices have no hover — a tap must not flash a clipped tooltip. */
+@media (hover: none), (pointer: coarse) {
+  .tip::after, .tip::before { display: none !important; }
+}
+
+/* Top-right settings cluster: right-align tooltips so they extend inward
+   (leftward) and never clip past the right edge. */
+.settings-cluster .tip::after {
+  left: auto;
+  right: 0;
+  transform: translateY(4px) scale(0.96);
+}
+.settings-cluster .tip:hover::after,
+.settings-cluster .tip:focus-visible::after {
+  transform: translateY(0) scale(1);
+}
+.settings-cluster .tip::before { left: auto; right: 13px; transform: none; }
+
+/* Top-left brand: left-align its tooltip so it extends inward (rightward). */
+.brand.tip::after {
+  left: 0;
+  transform: translateY(4px) scale(0.96);
+}
+.brand.tip:hover::after,
+.brand.tip:focus-visible::after {
+  transform: translateY(0) scale(1);
+}
+.brand.tip::before { left: 20px; transform: none; }
+
+/* A touch narrower so centred tooltips have more slack near edges. */
+.tip::after { max-width: 230px; }
+
 
 /* ============================================================
    INTRO SPLASH — "this is a school, start from nothing"
