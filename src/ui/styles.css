@@ -1496,36 +1496,122 @@ html[dir='rtl'] .stair-arrow { transform: translateX(-50%) scaleX(-1); }
   .splash-body { font-size: 13.5px; }
 }
 
-/* ---------- footer credits ---------- */
+/* ---------- footer credits (always visible; full detail in the modal) ---------- */
 
 .site-footer {
+  flex-shrink: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
   text-align: center;
-  font-size: 10.5px;
+  font-size: 11px;
   letter-spacing: 0.04em;
-  color: rgba(191, 214, 200, 0.4);
-  padding: 2px 16px 8px;
+  color: rgba(191, 214, 200, 0.5);
+  padding: 3px 16px 7px;
   z-index: 6;
   position: relative;
-  direction: ltr; /* the credits line stays English in every locale */
 }
 
 .site-footer .fbrand {
   font-family: var(--font-display);
-  color: rgba(217, 164, 65, 0.55);
+  color: rgba(217, 164, 65, 0.6);
   letter-spacing: 0.12em;
 }
 
-.site-footer a {
-  color: rgba(217, 164, 65, 0.75);
+.site-footer .fsep { opacity: 0.5; }
+
+.site-footer a,
+.site-footer .flink {
+  color: rgba(217, 164, 65, 0.8);
   text-decoration: none;
-  border-bottom: 1px dotted rgba(217, 164, 65, 0.35);
+  border-bottom: 1px dotted rgba(217, 164, 65, 0.4);
   transition: color 0.15s, border-color 0.15s;
+  font-size: inherit;
+  letter-spacing: inherit;
 }
 
-.site-footer a:hover {
+.site-footer .flink { padding: 0; }
+
+.site-footer a:hover,
+.site-footer .flink:hover {
   color: var(--gold-glow);
   border-bottom-color: var(--gold-glow);
 }
+
+/* ---------- credits & licenses modal ---------- */
+
+.credits {
+  position: relative;
+  margin: auto;
+  width: min(440px, 100%);
+  background: linear-gradient(168deg, #12503a, #0a3124);
+  border: 1px solid rgba(217, 164, 65, 0.4);
+  border-radius: 20px;
+  padding: 28px 30px 24px;
+  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.6);
+  text-align: center;
+}
+
+.credits-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 24px;
+  color: var(--gold-glow);
+  margin: 0 0 10px;
+}
+
+.credits-mit { font-size: 14px; color: #cfe3d7; margin: 0 0 16px; line-height: 1.5; }
+
+.credits-by { font-size: 15px; color: var(--cream); margin-bottom: 18px; }
+
+.credits-section {
+  text-align: start;
+  border-top: 1px solid rgba(217, 164, 65, 0.2);
+  padding-top: 12px;
+  margin-top: 12px;
+}
+
+.credits-label {
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--brass);
+  margin-bottom: 8px;
+}
+
+.credits-list { list-style: none; margin: 0; padding: 0; }
+
+.credits-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+  font-size: 14px;
+}
+
+.credits-lic {
+  font-size: 11px;
+  color: #86a596;
+  border: 1px solid rgba(217, 164, 65, 0.3);
+  border-radius: 999px;
+  padding: 1px 9px;
+  letter-spacing: 0.05em;
+}
+
+.credits-fonts { font-size: 13px; line-height: 1.5; }
+
+.credits a {
+  color: var(--gold-glow);
+  text-decoration: none;
+  border-bottom: 1px dotted rgba(217, 164, 65, 0.4);
+}
+.credits a:hover { border-bottom-color: var(--gold-glow); }
+
+.credits-original { font-size: 12px; color: #86a596; margin: 16px 0 0; line-height: 1.5; }
+
+.credits-close { margin-top: 20px; }
 
 /* misc */
 .fade-scroll::-webkit-scrollbar { width: 10px; }
@@ -1569,7 +1655,7 @@ html[dir='rtl'] .stair-arrow { transform: translateX(-50%) scaleX(-1); }
   .table-wrap { padding: 16px 20px 22px; }
   .action-dock { min-height: 92px; padding: 6px 12px 10px; gap: 7px; }
   .btn { padding: 11px 20px; font-size: 14px; }
-  .site-footer { display: none; }
+  .site-footer { font-size: 10px; padding: 2px 12px 5px; }
   .coach { bottom: 108px; }
   .strength-meter { bottom: 108px; }
 }
@@ -1635,7 +1721,9 @@ html[dir='rtl'] .stair-arrow { transform: translateX(-50%) scaleX(-1); }
   .coach-avatar { width: 42px; height: 42px; font-size: 21px; }
   .coach-card { font-size: 12.5px; padding: 10px 12px; border-radius: 4px 16px 16px 16px; }
 
-  .site-footer { font-size: 8.5px; padding: 0 10px 6px; }
+  .site-footer { font-size: 9.5px; padding: 2px 10px 6px; gap: 0; }
+  .credits { padding: 22px 18px 20px; }
+  .credits-title { font-size: 21px; }
   .predict-toast { padding: 12px 18px 10px; width: max-content; max-width: 88vw; }
   .predict-toast .big { font-size: 26px; }
   .predict-toast .why { font-size: 11.5px; }

@@ -7,6 +7,7 @@ import { sfx, setSoundEnabled } from '../app/sfx'
 import { L, nextLocale, setLocale } from '../i18n'
 import { Table } from './Table'
 import { ActionBar } from './ActionBar'
+import { CreditsModal } from './CreditsModal'
 import {
   NewRuleBanner,
   CoachBubble,
@@ -68,7 +69,7 @@ function ProgressPane() {
   )
 }
 
-function SettingsCluster() {
+function SettingsCluster({ onCredits }: { onCredits: () => void }) {
   const progress = useProgress()
   const [codexOpen, setCodexOpen] = useState(false)
 
@@ -80,6 +81,9 @@ function SettingsCluster() {
         onClick={() => progress.setSeenIntro(false)}
       >
         ?
+      </button>
+      <button className="mini-btn tip tip-down" data-tip={L.credits.tip} onClick={onCredits}>
+        ⓘ
       </button>
       <button className="mini-btn tip tip-down" data-tip={L.settings.codexTip} onClick={() => setCodexOpen((o) => !o)}>
         📖
@@ -148,6 +152,8 @@ export function GameScreen() {
   const handNumber = useGame((g) => g.handNumber)
   const blinds = useGame((g) => g.blinds)
   const seats = useGame((g) => g.seats)
+  const playMode = useGame((g) => g.playMode)
+  const [creditsOpen, setCreditsOpen] = useState(false)
   if (!levelNumber) return null
   const level = getLevel(levelNumber)
   const hero = seats.find((s) => s.isHero)
@@ -175,37 +181,43 @@ export function GameScreen() {
           <div className="brand-title">{level.title}</div>
           <div className="brand-meta">{L.hud.meta(level.levelNumber, Math.max(1, handNumber), blinds)}</div>
         </div>
-        <div className="journey">
-          <ProgressPane />
-        </div>
-        <SettingsCluster />
-      </header>
-
-      <div className="subhud">
-        <div className="hud-pill tip tip-down" data-tip={goalTip}>
-          🎯 {goal}
-        </div>
-        <div className="hud-pill quest tip tip-down" data-tip={L.hud.questTip(level.quest.label)}>
-          ⭐ {level.quest.label}: <b>{Math.min(run.questProgress, run.questTarget)}/{run.questTarget}</b>
-        </div>
-        {hero && level.rules.startingStack > 0 && (
-          <div className="hud-pill tip tip-down" data-tip={L.hud.stackTip(level.rules.startingStack)}>
-            🪙 <b>{hero.stack}</b>
+        {!playMode && (
+          <div className="journey">
+            <ProgressPane />
           </div>
         )}
-      </div>
+        {playMode && <div className="journey" />}
+        <SettingsCluster onCredits={() => setCreditsOpen(true)} />
+      </header>
+
+      {!playMode && (
+        <div className="subhud">
+          <div className="hud-pill tip tip-down" data-tip={goalTip}>
+            🎯 {goal}
+          </div>
+          <div className="hud-pill quest tip tip-down" data-tip={L.hud.questTip(level.quest.label)}>
+            ⭐ {level.quest.label}: <b>{Math.min(run.questProgress, run.questTarget)}/{run.questTarget}</b>
+          </div>
+          {hero && level.rules.startingStack > 0 && (
+            <div className="hud-pill tip tip-down" data-tip={L.hud.stackTip(level.rules.startingStack)}>
+              🪙 <b>{hero.stack}</b>
+            </div>
+          )}
+        </div>
+      )}
 
       <Table />
       <ActionBar />
 
       <footer className="site-footer">
-        <span className="fbrand">EASY STREETS</span> · by{' '}
-        <a href="https://dorkalev.com" target="_blank" rel="noopener noreferrer">Dor Kalev</a> · built with{' '}
-        <a href="https://react.dev" target="_blank" rel="noopener noreferrer">React</a>,{' '}
-        <a href="https://github.com/pmndrs/zustand" target="_blank" rel="noopener noreferrer">Zustand</a> &amp;{' '}
-        <a href="https://motion.dev" target="_blank" rel="noopener noreferrer">Motion</a> · type by{' '}
-        <a href="https://fonts.google.com" target="_blank" rel="noopener noreferrer">Google Fonts</a>{' '}
-        (Fraunces, Nunito, Frank Ruhl Libre, Assistant, Amiri, Cairo)
+        <span className="fbrand">EASY STREETS</span>
+        <span className="fsep"> · </span>
+        {L.credits.footBy}{' '}
+        <a href="https://dorkalev.com" target="_blank" rel="noopener noreferrer">Dor Kalev</a>
+        <span className="fsep"> · </span>
+        <button className="flink" onClick={() => setCreditsOpen(true)}>
+          {L.credits.footLink}
+        </button>
       </footer>
 
       <StrengthMeter />
@@ -216,6 +228,7 @@ export function GameScreen() {
       <CoachBubble />
       <NewRuleBanner />
       <LevelEndModal />
+      <CreditsModal open={creditsOpen} onClose={() => setCreditsOpen(false)} />
     </div>
   )
 }

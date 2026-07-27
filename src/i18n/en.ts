@@ -27,6 +27,19 @@ export const en = {
     reopenTip: 'How Easy Streets works',
   },
 
+  credits: {
+    footBy: 'by',
+    footLink: 'Credits & licenses',
+    tip: 'Credits & licenses',
+    title: 'Credits & Licenses',
+    mit: 'Easy Streets is free and open source under the MIT license.',
+    builtBy: 'Built by',
+    builtWith: 'Built with',
+    fonts: 'Typefaces — SIL Open Font License',
+    original: 'The poker engine, hand evaluator, bot AI and sound are original work.',
+    close: 'Close',
+  },
+
   hud: {
     meta: (level: number, hand: number, blinds: { small: number; big: number } | null) =>
       `Level ${level} · Hand ${hand}${blinds ? ` · Blinds ${blinds.small}/${blinds.big}` : ''}`,

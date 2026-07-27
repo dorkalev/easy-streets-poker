@@ -34,6 +34,19 @@ export const ar: Strings = {
     reopenTip: "كيف تعمل Easy Streets",
   },
 
+  credits: {
+    footBy: "بواسطة",
+    footLink: "الاعتمادات والتراخيص",
+    tip: "الاعتمادات والتراخيص",
+    title: "الاعتمادات والتراخيص",
+    mit: "Easy Streets مجاني ومفتوح المصدر تحت رخصة MIT.",
+    builtBy: "من إنشاء",
+    builtWith: "بُني باستخدام",
+    fonts: "الخطوط — رخصة SIL Open Font",
+    original: "محرك البوكر ومقيّم الأيادي وذكاء الخصوم والصوت من عمل أصلي.",
+    close: "إغلاق",
+  },
+
   hud: {
     meta: (level, hand, blinds) =>
       `المستوى ${level} · اليد ${hand}${blinds ? ` · البلايندز ${blinds.small}/${blinds.big}` : ""}`,

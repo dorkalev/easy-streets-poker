@@ -36,6 +36,19 @@ export const he: Strings = {
     reopenTip: "איך Easy Streets עובד",
   },
 
+  credits: {
+    footBy: "מאת",
+    footLink: "קרדיטים ורישיונות",
+    tip: "קרדיטים ורישיונות",
+    title: "קרדיטים ורישיונות",
+    mit: "Easy Streets הוא חינמי וקוד פתוח תחת רישיון MIT.",
+    builtBy: "נבנה על ידי",
+    builtWith: "נבנה עם",
+    fonts: "גופנים — רישיון SIL Open Font",
+    original: "מנוע הפוקר, מעריך הידיים, בינת הבוטים והסאונד הם עבודה מקורית.",
+    close: "סגור",
+  },
+
   hud: {
     meta: (level, hand, blinds) =>
       `שלב ${level} · יד ${hand}${blinds ? ` · בליינדים ${blinds.small}/${blinds.big}` : ""}`,

@@ -97,6 +97,8 @@ export interface GameView {
   run: RunView
   heroStrength: StrengthLabel | null
   stoplight: 'green' | 'yellow' | 'red' | null
+  /** Free-play mode (/play): full poker, no learning chrome. */
+  playMode: boolean
 }
 
 const EMPTY_RUN: RunView = {
@@ -130,6 +132,7 @@ const INITIAL_VIEW: GameView = {
   run: EMPTY_RUN,
   heroStrength: null,
   stoplight: null,
+  playMode: false,
 }
 
 export const useGame = create<GameView>(() => INITIAL_VIEW)
@@ -232,10 +235,16 @@ function clearTimers(): void {
 // Public API (called from UI)
 // ---------------------------------------------------------------------------
 
-export function startLevel(levelNumber: number): void {
+/** Free-play mode: drop straight into the full game (Level 18) with no
+ * learning chrome, no new-rule banner, endless replays. */
+export function startPlay(): void {
+  startLevel(18, { play: true })
+}
+
+export function startLevel(levelNumber: number, opts: { play?: boolean } = {}): void {
   clearTimers()
   const level = getLevel(levelNumber)
-  track('level_start', { level: levelNumber, level_title: level.title })
+  track(opts.play ? 'play_start' : 'level_start', { level: levelNumber, level_title: level.title })
   const progress = useProgress.getState()
   setSoundEnabled(progress.soundOn)
   orc.level = level
@@ -286,7 +295,9 @@ export function startLevel(levelNumber: number): void {
     ...INITIAL_VIEW,
     levelNumber,
     seats,
-    newRuleOpen: true,
+    playMode: opts.play ?? false,
+    // Play mode skips the rule banner and deals immediately.
+    newRuleOpen: !opts.play,
     run: {
       ...EMPTY_RUN,
       questTarget: questTarget(level.quest),
@@ -294,7 +305,11 @@ export function startLevel(levelNumber: number): void {
       profitStart: level.rules.startingStack,
     },
   })
-  sfx.newRule()
+  if (opts.play) {
+    wait(400, startHand)
+  } else {
+    sfx.newRule()
+  }
 }
 
 export function dismissNewRule(): void {
@@ -338,6 +353,10 @@ export function dismissPredictionResult(): void {
 }
 
 export function retryLevel(): void {
+  if (get().playMode) {
+    startPlay()
+    return
+  }
   const n = get().levelNumber
   if (n) startLevel(n)
 }
@@ -380,10 +399,13 @@ function resetHandTrackers(): void {
 /** Serially animate a batch of events, then decide what happens next. */
 function processEvents(events: GameEvent[]): void {
   if (!orc.level || !orc.engine) return
-  const { messages, coach } = coachOnEvents(events, orc.engine, orc.level, orc.coach)
-  orc.coach = coach
-  useProgress.getState().setCoachFired(coach.firedIds)
-  orc.coachQueue.push(...messages)
+  // Free-play mode is just poker — no teaching prompts from Penny.
+  if (!useGame.getState().playMode) {
+    const { messages, coach } = coachOnEvents(events, orc.engine, orc.level, orc.coach)
+    orc.coach = coach
+    useProgress.getState().setCoachFired(coach.firedIds)
+    orc.coachQueue.push(...messages)
+  }
 
   let delay = 0
   for (const ev of events) {

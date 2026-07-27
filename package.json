@@ -3,6 +3,9 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
+  "license": "MIT",
+  "author": "Dor Kalev (https://dorkalev.com)",
+  "homepage": "https://poker.dorkalev.com",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
