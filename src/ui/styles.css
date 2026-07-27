@@ -636,9 +636,8 @@ button {
 .bubble {
   position: absolute;
   bottom: calc(100% + 8px);
-  left: 50%;
-  min-width: 130px;
-  max-width: 210px;
+  min-width: 120px;
+  max-width: 200px;
   background: var(--paper);
   color: var(--ink);
   font-size: 12.5px;
@@ -650,14 +649,28 @@ button {
   z-index: 8;
 }
 
+/* Anchor by seat side so edge-seat bubbles grow toward the table centre and
+   never spill off-screen. The tail sits ~over the avatar in each case. */
+.bubble-center,
+.bubble-left {
+  left: 50%;
+  margin-left: -22px; /* tail (at 22px) lands over the avatar centre */
+}
+.bubble-right {
+  right: 50%;
+  margin-right: -22px;
+}
+
 .bubble::after {
   content: '';
   position: absolute;
   top: 100%;
-  left: 24px;
   border: 7px solid transparent;
   border-top-color: var(--paper);
 }
+.bubble-center::after,
+.bubble-left::after { left: 22px; }
+.bubble-right::after { right: 22px; }
 
 /* --- center: community + pot --- */
 
