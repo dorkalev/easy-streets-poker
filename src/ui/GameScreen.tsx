@@ -19,7 +19,7 @@ import {
   RankRibbon,
 } from './Overlays'
 
-/** The linear journey strip: all 17 levels, always visible on top. */
+/** The linear journey strip: all 18 levels, always visible on top. */
 function ProgressPane() {
   const progress = useProgress()
   const current = useGame((g) => g.levelNumber)
