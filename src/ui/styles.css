@@ -499,6 +499,23 @@ button {
   transition: opacity 0.3s;
 }
 
+/* Speech bubbles live in a dedicated top layer above every seat (rendered
+   last, high z-index), so they're always in front — never hidden by any
+   avatar, name, cards, or another seat. */
+.bubble-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+}
+
+/* A zero-size anchor at the seat's centre; the bubble is placed above/below it. */
+.bubble-anchor {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
 .seat.folded { opacity: 0.45; filter: saturate(0.5); }
 .seat.busted { opacity: 0.25; filter: grayscale(1); }
 
@@ -645,25 +662,22 @@ button {
   padding: 9px 12px;
   border-radius: 14px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
-  z-index: 8;
 }
 
-/* Anchor by seat side so edge-seat bubbles grow toward the table centre and
-   never spill off-screen. The tail sits ~over the avatar in each case. */
+/* Horizontal: edge-seat bubbles grow toward the table centre (tail over the
+   avatar); measured from the anchor point (the seat centre). */
 .bubble-center,
 .bubble-left {
-  left: 50%;
-  margin-left: -22px; /* tail (at 22px) lands over the avatar centre */
+  left: -22px; /* tail (at 22px) lands over the avatar */
 }
 .bubble-right {
-  right: 50%;
-  margin-right: -22px;
+  right: -22px;
 }
 
-/* Vertical placement: most seats float the bubble above; top-row seats hang
-   it below (into the open felt) since there's no room above them. */
-.bubble-up { bottom: calc(100% + 8px); }
-.bubble-down { top: calc(100% + 8px); }
+/* Vertical: float above the avatar (up) or hang below it (down, for top-row
+   seats). Offsets are from the seat-centre anchor, clearing the avatar. */
+.bubble-up { bottom: 34px; }
+.bubble-down { top: 34px; }
 
 .bubble::after {
   content: '';

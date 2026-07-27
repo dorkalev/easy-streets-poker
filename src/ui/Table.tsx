@@ -101,7 +101,41 @@ export function Table() {
             {carryPot > 0 && <span className="carry-tag">{L.table.carried}</span>}
           </motion.div>
         </div>
+
+        {/* Speech bubbles live in their own top layer (rendered last, high
+            z-index) so a bubble is ALWAYS in front — never hidden behind any
+            seat's avatar, name, cards, or another seat's bubble. */}
+        <div className="bubble-layer">
+          <AnimatePresence>
+            {seats.map((seat) => {
+              if (!seat.speech) return null
+              const botIndex = bots.findIndex((b) => b.playerId === seat.playerId)
+              const pos = seatPos(seat, bots.length, botIndex)
+              return <SpeechBubble key={seat.playerId} pos={pos} hero={seat.isHero} text={seat.speech.text} />
+            })}
+          </AnimatePresence>
+        </div>
       </div>
+    </div>
+  )
+}
+
+function SpeechBubble({ pos, hero, text }: { pos: Pos; hero: boolean; text: string }) {
+  // Point inward from edge seats; hang downward from top-row seats.
+  const side = pos.x < 34 ? 'left' : pos.x > 66 ? 'right' : 'center'
+  const vert = pos.y < 30 ? 'down' : 'up'
+  const top = hero ? 'var(--hero-y, 85%)' : `${pos.y}%`
+  return (
+    <div className={`bubble-anchor bubble-anchor-${vert}`} style={{ left: `${pos.x}%`, top }}>
+      <motion.div
+        className={`bubble bubble-${side} bubble-${vert}`}
+        initial={{ opacity: 0, y: 8, scale: 0.8 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.85 }}
+        transition={{ type: 'spring', stiffness: 400, damping: 24 }}
+      >
+        {text}
+      </motion.div>
     </div>
   )
 }
@@ -132,27 +166,8 @@ function Seat({
   const showBack = !seat.isHero && !seat.revealed && seat.cardCount > 0 && seat.status !== 'folded'
   const showFace = (seat.isHero || seat.revealed) && seat.cards.length > 0 && seat.status !== 'folded'
 
-  // Edge-seat bubbles point inward (never spill off-screen sideways); top-row
-  // seats hang their bubble downward into the open felt (no room above them).
-  const bubbleSide = pos.x < 34 ? 'left' : pos.x > 66 ? 'right' : 'center'
-  const bubbleVert = pos.y < 30 ? 'down' : 'up'
-
   return (
     <div className={classes} style={{ left: `${pos.x}%`, top: topOverride ?? `${pos.y}%` }}>
-      <AnimatePresence>
-        {seat.speech && (
-          <motion.div
-            className={`bubble bubble-${bubbleSide} bubble-${bubbleVert}`}
-            initial={{ opacity: 0, y: 8, scale: 0.8 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.85 }}
-            transition={{ type: 'spring', stiffness: 400, damping: 24 }}
-          >
-            {seat.speech.text}
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       <AnimatePresence>
         {seat.lastAction && !seat.speech && (
           <motion.div
