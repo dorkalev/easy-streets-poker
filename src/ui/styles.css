@@ -1500,11 +1500,8 @@ html[dir='rtl'] .stair-arrow { transform: translateX(-50%) scaleX(-1); }
 
 .site-footer {
   flex-shrink: 0;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 0;
+  /* Plain inline text flow: flex would collapse the spaces between words. */
+  display: block;
   text-align: center;
   font-size: 11px;
   letter-spacing: 0.04em;
@@ -1520,7 +1517,7 @@ html[dir='rtl'] .stair-arrow { transform: translateX(-50%) scaleX(-1); }
   letter-spacing: 0.12em;
 }
 
-.site-footer .fsep { opacity: 0.5; }
+.site-footer .fsep { opacity: 0.5; white-space: pre; }
 
 .site-footer a,
 .site-footer .flink {
@@ -1532,7 +1529,7 @@ html[dir='rtl'] .stair-arrow { transform: translateX(-50%) scaleX(-1); }
   letter-spacing: inherit;
 }
 
-.site-footer .flink { padding: 0; }
+.site-footer .flink { padding: 0; display: inline; vertical-align: baseline; }
 
 .site-footer a:hover,
 .site-footer .flink:hover {
