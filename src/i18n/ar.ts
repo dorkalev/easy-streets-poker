@@ -34,6 +34,13 @@ export const ar: Strings = {
     reopenTip: "كيف تعمل Easy Streets",
   },
 
+  mode: {
+    play: "لعب حر",
+    learn: "الدروس",
+    playTip: "تخطَّ الدروس والعب نو-ليميت هولدم كاملة",
+    learnTip: "العودة إلى الدروس خطوة بخطوة",
+  },
+
   credits: {
     footBy: "بواسطة",
     footLink: "الاعتمادات والتراخيص",

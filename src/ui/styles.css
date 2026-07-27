@@ -330,6 +330,25 @@ button {
 
 .mini-btn:hover { border-color: var(--brass); }
 
+/* mode toggle: a labeled pill, more prominent than the round mini-btns */
+.mode-btn {
+  width: auto;
+  border-radius: 999px;
+  padding: 0 13px;
+  gap: 6px;
+  font-size: 14px;
+  background: rgba(217, 164, 65, 0.14);
+  border-color: rgba(217, 164, 65, 0.5);
+}
+.mode-btn .mode-label {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--gold-glow);
+}
+.mode-btn:hover { background: rgba(217, 164, 65, 0.24); }
+
 .mini-tag {
   position: absolute;
   bottom: -4px;
@@ -1696,6 +1715,8 @@ html[dir='rtl'] .stair-arrow { transform: translateX(-50%) scaleX(-1); }
   .brand-meta { font-size: 9.5px; letter-spacing: 0.08em; }
   .settings-cluster { gap: 5px; }
   .mini-btn { width: 30px; height: 30px; font-size: 13px; }
+  .mode-btn { width: auto; padding: 0 9px; }
+  .mode-btn .mode-label { display: none; } /* icon-only on phones */
   .journey { order: 3; flex-basis: 100%; }
   .progress-pane { flex-wrap: wrap; gap: 5px; padding: 4px 2px; justify-content: center; }
   .progress-pane::before { display: none; }

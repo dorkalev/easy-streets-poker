@@ -36,6 +36,13 @@ export const he: Strings = {
     reopenTip: "איך Easy Streets עובד",
   },
 
+  mode: {
+    play: "משחק חופשי",
+    learn: "שיעורים",
+    playTip: "דלגו על השיעורים ושחקו פוקר נו-לימיט מלא",
+    learnTip: "חזרה לשיעורים שלב אחר שלב",
+  },
+
   credits: {
     footBy: "מאת",
     footLink: "קרדיטים ורישיונות",

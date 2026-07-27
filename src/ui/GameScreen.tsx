@@ -1,5 +1,5 @@
 import { Fragment, useState } from 'react'
-import { useGame, startLevel } from '../app/game'
+import { useGame, startLevel, enterPlayMode, exitPlayMode } from '../app/game'
 import { useProgress, isLevelUnlocked } from '../app/progress'
 import { getLevel, LEVELS } from '../levels/levels'
 import { HAND_CATEGORY_ORDER } from '../engine/types'
@@ -71,10 +71,19 @@ function ProgressPane() {
 
 function SettingsCluster({ onCredits }: { onCredits: () => void }) {
   const progress = useProgress()
+  const playMode = useGame((g) => g.playMode)
   const [codexOpen, setCodexOpen] = useState(false)
 
   return (
     <div className="settings-cluster">
+      <button
+        className="mini-btn mode-btn tip tip-down"
+        data-tip={playMode ? L.mode.learnTip : L.mode.playTip}
+        onClick={() => (playMode ? exitPlayMode() : enterPlayMode())}
+      >
+        {playMode ? '🎓' : '🎲'}
+        <span className="mode-label">{playMode ? L.mode.learn : L.mode.play}</span>
+      </button>
       <button
         className="mini-btn tip tip-down"
         data-tip={L.intro.reopenTip}

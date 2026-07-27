@@ -27,6 +27,13 @@ export const en = {
     reopenTip: 'How Easy Streets works',
   },
 
+  mode: {
+    play: 'Free play',
+    learn: 'Lessons',
+    playTip: "Skip the lessons and just play full No-Limit Hold'em",
+    learnTip: 'Back to the step-by-step lessons',
+  },
+
   credits: {
     footBy: 'by',
     footLink: 'Credits & licenses',

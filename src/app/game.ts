@@ -22,7 +22,7 @@ import { explainDecision } from '../bots/explain'
 import { PERSONALITIES } from '../bots/personalities'
 import type { BotContext, Mood } from '../bots/types'
 import { coachOnEvents, type CoachMessage, type CoachState } from '../coach/coach'
-import { getLevel } from '../levels/levels'
+import { getLevel, LEVELS } from '../levels/levels'
 import type { LevelConfig, Quest } from '../levels/types'
 import { sfx, setSoundEnabled } from './sfx'
 import { useProgress } from './progress'
@@ -239,6 +239,28 @@ function clearTimers(): void {
  * learning chrome, no new-rule banner, endless replays. */
 export function startPlay(): void {
   startLevel(18, { play: true })
+}
+
+/** The lowest level the learner hasn't cleared yet. */
+export function firstUnclearedLevel(): number {
+  const done = useProgress.getState().levels
+  return LEVELS.find((l) => !done[l.levelNumber]?.completed)?.levelNumber ?? LEVELS.length
+}
+
+/** In-app switch to free play — updates the URL to /play without a reload. */
+export function enterPlayMode(): void {
+  if (typeof window !== 'undefined' && !/\/play\/?$/i.test(window.location.pathname)) {
+    window.history.pushState({}, '', '/play')
+  }
+  if (!get().playMode) startPlay()
+}
+
+/** In-app switch back to the lessons — restores the URL to / without a reload. */
+export function exitPlayMode(): void {
+  if (typeof window !== 'undefined' && /\/play\/?$/i.test(window.location.pathname)) {
+    window.history.pushState({}, '', '/')
+  }
+  if (get().playMode) startLevel(firstUnclearedLevel())
 }
 
 export function startLevel(levelNumber: number, opts: { play?: boolean } = {}): void {
