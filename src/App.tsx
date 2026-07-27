@@ -4,6 +4,7 @@ import { useGame, startLevel, startPlay, enterPlayMode, exitPlayMode, firstUncle
 import { useProgress } from './app/progress'
 import { GameScreen } from './ui/GameScreen'
 import { IntroSplash } from './ui/IntroSplash'
+import { Tooltip } from './ui/Tooltip'
 
 const isPlayPath = () => typeof window !== 'undefined' && /^\/play\/?$/i.test(window.location.pathname)
 
@@ -28,6 +29,7 @@ export default function App() {
     <div className="app">
       {levelNumber !== null && <GameScreen />}
       <AnimatePresence>{!isPlayPath() && !seenIntro && <IntroSplash />}</AnimatePresence>
+      <Tooltip />
       <div className="vignette" />
     </div>
   )
