@@ -635,7 +635,6 @@ button {
 /* speech bubble */
 .bubble {
   position: absolute;
-  bottom: calc(100% + 8px);
   min-width: 120px;
   max-width: 200px;
   background: var(--paper);
@@ -661,13 +660,18 @@ button {
   margin-right: -22px;
 }
 
+/* Vertical placement: most seats float the bubble above; top-row seats hang
+   it below (into the open felt) since there's no room above them. */
+.bubble-up { bottom: calc(100% + 8px); }
+.bubble-down { top: calc(100% + 8px); }
+
 .bubble::after {
   content: '';
   position: absolute;
-  top: 100%;
   border: 7px solid transparent;
-  border-top-color: var(--paper);
 }
+.bubble-up::after { top: 100%; border-top-color: var(--paper); }
+.bubble-down::after { bottom: 100%; border-bottom-color: var(--paper); }
 .bubble-center::after,
 .bubble-left::after { left: 22px; }
 .bubble-right::after { right: 22px; }

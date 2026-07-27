@@ -132,15 +132,17 @@ function Seat({
   const showBack = !seat.isHero && !seat.revealed && seat.cardCount > 0 && seat.status !== 'folded'
   const showFace = (seat.isHero || seat.revealed) && seat.cards.length > 0 && seat.status !== 'folded'
 
-  // Edge-seat bubbles point inward so they never spill off-screen.
+  // Edge-seat bubbles point inward (never spill off-screen sideways); top-row
+  // seats hang their bubble downward into the open felt (no room above them).
   const bubbleSide = pos.x < 34 ? 'left' : pos.x > 66 ? 'right' : 'center'
+  const bubbleVert = pos.y < 30 ? 'down' : 'up'
 
   return (
     <div className={classes} style={{ left: `${pos.x}%`, top: topOverride ?? `${pos.y}%` }}>
       <AnimatePresence>
         {seat.speech && (
           <motion.div
-            className={`bubble bubble-${bubbleSide}`}
+            className={`bubble bubble-${bubbleSide} bubble-${bubbleVert}`}
             initial={{ opacity: 0, y: 8, scale: 0.8 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, scale: 0.85 }}
