@@ -211,12 +211,14 @@ export function GameScreen() {
 
       <footer className="site-footer">
         <span className="fbrand">EASY STREETS</span>
-        <span className="fsep"> · </span>
-        {L.credits.footBy}{' '}
-        <a href="https://dorkalev.com" target="_blank" rel="noopener noreferrer">Dor Kalev</a>
-        <span className="fsep"> · </span>
+        <span className="fsep">·</span>
+        <span className="fby">
+          {L.credits.footBy}{' '}
+          <a href="https://dorkalev.com" target="_blank" rel="noopener noreferrer">Dor Kalev</a>
+        </span>
+        <span className="fsep">·</span>
         <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">{L.credits.github}</a>
-        <span className="fsep"> · </span>
+        <span className="fsep">·</span>
         <button className="flink" onClick={() => setCreditsOpen(true)}>
           {L.credits.footLink}
         </button>

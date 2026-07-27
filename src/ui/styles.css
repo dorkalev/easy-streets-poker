@@ -1500,9 +1500,12 @@ html[dir='rtl'] .stair-arrow { transform: translateX(-50%) scaleX(-1); }
 
 .site-footer {
   flex-shrink: 0;
-  /* Plain inline text flow: flex would collapse the spaces between words. */
-  display: block;
-  text-align: center;
+  /* Flex with a single gap = equal spacing around every item and separator. */
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 3px 9px;
   font-size: 11px;
   letter-spacing: 0.04em;
   color: rgba(191, 214, 200, 0.5);
@@ -1515,9 +1518,12 @@ html[dir='rtl'] .stair-arrow { transform: translateX(-50%) scaleX(-1); }
   font-family: var(--font-display);
   color: rgba(217, 164, 65, 0.6);
   letter-spacing: 0.12em;
+  /* cancel most of the trailing letter-spacing so the gap after it matches
+     the other separators (full -0.12em over-pulls by ~1px) */
+  margin-inline-end: -0.02em;
 }
 
-.site-footer .fsep { opacity: 0.5; white-space: pre; }
+.site-footer .fsep { opacity: 0.45; }
 
 .site-footer a,
 .site-footer .flink {
