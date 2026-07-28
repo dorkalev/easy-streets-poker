@@ -1512,9 +1512,11 @@ button {
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  gap: clamp(4px, 2.2vw, 18px);
+  gap: clamp(3px, 2.2vw, 18px);
   margin: 6px 0 22px;
   padding-top: 78px; /* room for the tallest riser */
+  width: 100%;
+  max-width: 100%;
 }
 
 .stair {
@@ -1523,6 +1525,10 @@ button {
   flex-direction: column;
   align-items: center;
   gap: 8px;
+  /* Equal share of the row so five stages + labels can never overflow. */
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 96px;
   transform: translateY(calc(var(--i) * -17px));
   opacity: 0;
   animation: stair-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
@@ -1570,7 +1576,9 @@ button {
   font-weight: 800;
   letter-spacing: 0.04em;
   color: #a8c4b4;
-  white-space: nowrap;
+  line-height: 1.15;
+  text-align: center;
+  max-width: 100%; /* wrap long labels instead of widening the column */
 }
 
 .stair-arrow {
@@ -1604,12 +1612,14 @@ html[dir='rtl'] .stair-arrow { transform: translateX(-50%) scaleX(-1); }
 }
 
 @media (max-width: 720px) {
-  .splash-card-panel { padding: 26px 18px 22px; border-radius: 20px; }
-  .splash-stairs { gap: 3px; padding-top: 70px; }
-  .stair-scene { min-height: 36px; padding: 4px 5px; }
-  .splash-card { font-size: 11px; min-width: 18px; padding: 6px 4px; }
-  .stair-emoji { font-size: 24px; }
-  .stair-label { font-size: 9px; }
+  .splash-card-panel { padding: 26px 14px 22px; border-radius: 20px; }
+  .splash-stairs { gap: 2px; padding-top: 66px; }
+  .stair { gap: 5px; }
+  .stair-scene { min-height: 32px; padding: 4px 2px; gap: 1px; }
+  .splash-card { font-size: 9.5px; min-width: 14px; padding: 5px 3px; }
+  .splash-card + .splash-card { margin-left: -3px; }
+  .stair-emoji { font-size: 22px; }
+  .stair-label { font-size: 8.5px; }
   .stair-arrow { display: none; }
   .splash-body { font-size: 13.5px; }
 }
