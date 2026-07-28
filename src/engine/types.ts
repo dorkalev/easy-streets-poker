@@ -160,6 +160,10 @@ export interface GameState {
   raisesThisRound: number
   /** Seats queued to act in the current betting round, in order. */
   toActQueue: number[]
+  /** Seats that may only call/fold for the rest of this round — they already
+   * acted and are now facing an incomplete (sub-min) all-in raise, which by
+   * the rules does not reopen their right to re-raise. */
+  noRaiseSeats: number[]
   carryPot: number
   currentBlinds: { small: number; big: number } | null
   /** Winner already decided by folds (no showdown needed). */

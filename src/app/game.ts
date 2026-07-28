@@ -26,7 +26,7 @@ import { getLevel, LEVELS } from '../levels/levels'
 import type { LevelConfig, Quest } from '../levels/types'
 import { sfx, setSoundEnabled } from './sfx'
 import { useProgress } from './progress'
-import { track } from './analytics'
+import { track, setUserProps, sessionSeconds } from './analytics'
 
 // ---------------------------------------------------------------------------
 // View types
@@ -175,6 +175,8 @@ interface Orc {
    * hand-complete (batch pump, toast auto-clear, coach auto-dismiss) —
    * hand completion side effects must run exactly once per hand. */
   lastCompletedHand: number
+  /** performance.now() when the current level began (for its duration). */
+  levelStartMs: number
   // run trackers
   predictionStreak: number
   handsPlayed: number
@@ -202,6 +204,7 @@ const orc: Orc = {
   overrideCursor: {},
   awaitingBot: false,
   lastCompletedHand: -1,
+  levelStartMs: 0,
   predictionStreak: 0,
   handsPlayed: 0,
   handsWon: 0,
@@ -266,8 +269,15 @@ export function exitPlayMode(): void {
 export function startLevel(levelNumber: number, opts: { play?: boolean } = {}): void {
   clearTimers()
   const level = getLevel(levelNumber)
-  track(opts.play ? 'play_start' : 'level_start', { level: levelNumber, level_title: level.title })
+  orc.levelStartMs = typeof performance !== 'undefined' ? performance.now() : 0
   const progress = useProgress.getState()
+  const passed = Object.values(progress.levels).filter((r) => r.completed).length
+  track(opts.play ? 'play_start' : 'level_start', {
+    level: levelNumber,
+    level_title: level.title,
+    levels_passed: passed, // how many levels the player has cleared so far
+    session_seconds: sessionSeconds(),
+  })
   setSoundEnabled(progress.soundOn)
   orc.level = level
   orc.seed = seedFrom(Date.now() & 0xffffffff, levelNumber)
@@ -928,14 +938,10 @@ function endLevel(outcome: 'won' | 'lost'): void {
   const questDone = orc.questProgress >= questTarget(level.quest)
   const flawless = outcome === 'won' && questDone && orc.rebuys === 0
   const stars = outcome === 'won' ? 1 + (questDone ? 1 : 0) + (flawless ? 1 : 0) : 0
-
-  track('level_complete', {
-    level: level.levelNumber,
-    level_title: level.title,
-    outcome,
-    stars,
-    quest_done: questDone,
-  })
+  const durationSec =
+    orc.levelStartMs && typeof performance !== 'undefined'
+      ? Math.round((performance.now() - orc.levelStartMs) / 1000)
+      : 0
 
   if (outcome === 'won') {
     useProgress.getState().recordResult(level.levelNumber, {
@@ -947,6 +953,29 @@ function endLevel(outcome: 'won' | 'lost'): void {
   } else {
     sfx.lose()
   }
+
+  // Report the outcome, then update the "how far did they get / how long did
+  // they spend" signals so GA can show whether people actually learn.
+  const done = useProgress.getState().levels
+  const levelsPassed = Object.values(done).filter((r) => r.completed).length
+  const highestLevel = Object.entries(done).reduce(
+    (max, [n, r]) => (r.completed ? Math.max(max, Number(n)) : max),
+    0,
+  )
+  track('level_complete', {
+    level: level.levelNumber,
+    level_title: level.title,
+    outcome,
+    stars,
+    quest_done: questDone,
+    duration_sec: durationSec, // time spent on this level
+    session_seconds: sessionSeconds(), // time in the app so far
+    levels_passed: levelsPassed,
+  })
+  if (outcome === 'won') {
+    track('level_passed', { level: level.levelNumber, duration_sec: durationSec })
+  }
+  setUserProps({ levels_passed: levelsPassed, highest_level: highestLevel })
   wait(900, () =>
     set({
       levelEnd: { outcome, stars, profit, questDone, title: level.title },

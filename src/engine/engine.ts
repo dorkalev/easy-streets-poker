@@ -198,6 +198,7 @@ export function createGame(rules: RulesConfig, seed: number, playerIds: string[]
     minRaise: 0,
     raisesThisRound: 0,
     toActQueue: [],
+    noRaiseSeats: [],
     carryPot: 0,
     currentBlinds: null,
     foldedOut: false,
@@ -218,12 +219,16 @@ export function legalActions(state: GameState): LegalAction[] {
   const allowed = (a: ActionType) => !betting.allowedActions || betting.allowedActions.includes(a)
   const streetBet = street.betSize ?? betting.fixedBet ?? betting.blinds?.big ?? 10
   const maxRaises = betting.maxRaisesPerRound ?? Infinity
+  // A seat facing an incomplete all-in it has already been "closed" against may
+  // only call or fold — no re-raise (real No-Limit rule).
+  const canRaise = !state.noRaiseSeats.includes(state.actingSeat)
 
   if (betting.mode === 'fixed') {
     if (state.currentBet === 0 && allowed('bet') && p.stack > 0) {
       actions.push({ type: 'bet', min: Math.min(streetBet, p.stack) })
     } else if (
       state.currentBet > 0 &&
+      canRaise &&
       allowed('raise') &&
       state.raisesThisRound < maxRaises &&
       p.stack > toCall
@@ -240,6 +245,7 @@ export function legalActions(state: GameState): LegalAction[] {
       actions.push({ type: 'bet', min: minBet, max: maxCommit })
     } else if (
       state.currentBet > 0 &&
+      canRaise &&
       allowed('raise') &&
       state.raisesThisRound < maxRaises &&
       maxCommit > state.currentBet
@@ -416,6 +422,7 @@ function startBettingRound(s: GameState, events: GameEvent[]): void {
   const street = currentStreet(s)!
   s.minRaise = street.betSize ?? betting.fixedBet ?? betting.blinds?.big ?? 10
   s.raisesThisRound = 0
+  s.noRaiseSeats = []
 
   // Preflop with blinds: first actor is left of the BB. Otherwise left of button.
   let startAfter = s.buttonSeat
@@ -601,13 +608,29 @@ function applyPlayerAction(
       let commitTo = resolved.amount ?? spec.min ?? 0
       commitTo = Math.min(Math.max(commitTo, spec.min ?? 0), spec.max ?? spec.min ?? commitTo)
       commitTo = Math.min(commitTo, maxCommit)
-      const raiseSize = commitTo - s.currentBet
+      const priorBet = s.currentBet
+      const raiseSize = commitTo - priorBet
+      // Full raise = at least a min-raise (opening bets are always "full"). An
+      // all-in for less is an incomplete raise.
+      const fullRaise = priorBet === 0 || raiseSize >= s.minRaise
+      // Players still pending before this action (they keep full rights).
+      const yetToAct = new Set(s.toActQueue.slice(1))
       const paid = commit(p, commitTo - p.committedThisRound)
       if (resolved.action === 'raise') s.raisesThisRound += 1
-      if (raiseSize >= s.minRaise) s.minRaise = raiseSize
+      if (fullRaise) s.minRaise = Math.max(s.minRaise, raiseSize)
       s.currentBet = p.committedThisRound
-      // A bet/raise re-opens the action for everyone else who can still act.
-      s.toActQueue = seatsAfter(s, seat).filter((st) => st !== seat && canAct(player(s, st)))
+      // Everyone else still able to act must respond to the new bet.
+      const reopened = seatsAfter(s, seat).filter((st) => st !== seat && canAct(player(s, st)))
+      s.toActQueue = reopened
+      if (fullRaise) {
+        // A full raise re-grants raise rights to everyone.
+        s.noRaiseSeats = []
+      } else {
+        // Incomplete all-in: seats that had already acted may only call/fold.
+        s.noRaiseSeats = Array.from(
+          new Set([...s.noRaiseSeats, ...reopened.filter((st) => !yetToAct.has(st))]),
+        )
+      }
       events.push({ type: 'player-acted', playerId: p.id, action: resolved.action, amount: paid, potAfter: potTotal(s), allIn: p.status === 'all-in' })
       // Prompt next without shifting: queue was rebuilt.
       finishAction(s, events, /*rebuiltQueue*/ true)
