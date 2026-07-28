@@ -10,15 +10,8 @@ const LANGS: { code: Locale; label: string }[] = [
   { code: 'ar', label: 'العربية' },
 ]
 
-// The climb, shown purely in cards: a lone high card growing hand-by-hand up
-// to a royal flush. No emoji, no labels — just the ascent.
-const HANDS: string[][] = [
-  ['A♠'],
-  ['9♥', '9♦'],
-  ['Q♠', 'Q♥', 'Q♦'],
-  ['J♠', 'J♥', 'J♦', 'J♣'],
-  ['10♠', 'J♠', 'Q♠', 'K♠', 'A♠'],
-]
+// A single fanned hand — the royal flush. No emoji, no labels, just cards.
+const HAND: string[] = ['10♠', 'J♥', 'Q♠', 'K♦', 'A♠']
 
 function MiniCard({ label }: { label: string }) {
   const red = label.includes('♥') || label.includes('♦')
@@ -69,13 +62,13 @@ export function IntroSplash() {
         <div className="splash-headline">{L.intro.title}</div>
 
         <div className="splash-climb" role="img" aria-label={L.intro.steps.join(' → ')}>
-          {HANDS.map((cards, i) => (
-            <div key={i} className="climb-hand" style={{ ['--i' as string]: i }}>
-              {cards.map((c, j) => (
-                <MiniCard key={j} label={c} />
-              ))}
-            </div>
-          ))}
+          <div className="climb-hand">
+            {HAND.map((c, i) => (
+              <span key={i} className="climb-card" style={{ ['--i' as string]: i, ['--n' as string]: HAND.length }}>
+                <MiniCard label={c} />
+              </span>
+            ))}
+          </div>
         </div>
 
         <p className="splash-body">{L.intro.body}</p>
