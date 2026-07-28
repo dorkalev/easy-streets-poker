@@ -141,7 +141,14 @@ button {
   background: linear-gradient(90deg, transparent, rgba(217, 164, 65, 0.45), transparent);
 }
 
-.brand { min-width: 215px; }
+.brand {
+  min-width: 215px;
+  display: block;
+  text-align: start;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.brand:hover { opacity: 0.85; }
 
 .brand-kicker {
   font-size: 10px;

@@ -185,11 +185,18 @@ export function GameScreen() {
   return (
     <div className="game">
       <header className="topbar">
-        <div className="brand tip tip-down" data-tip={L.hud.levelTip(Math.max(1, handNumber), blinds)}>
+        <button
+          className="brand tip tip-down"
+          data-tip={L.intro.reopenTip}
+          onClick={() => {
+            sfx.click()
+            useProgress.getState().setSeenIntro(false)
+          }}
+        >
           <div className="brand-kicker">{L.brand.kicker}</div>
           <div className="brand-title">{level.title}</div>
           <div className="brand-meta">{L.hud.meta(level.levelNumber, Math.max(1, handNumber), blinds)}</div>
-        </div>
+        </button>
         {!playMode && (
           <div className="journey">
             <ProgressPane />
