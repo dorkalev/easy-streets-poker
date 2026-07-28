@@ -1,5 +1,6 @@
 import { motion } from 'motion/react'
 import { useProgress } from '../app/progress'
+import { enterPlayMode } from '../app/game'
 import { L, getLocale, setLocale, type Locale } from '../i18n'
 import { sfx } from '../app/sfx'
 
@@ -32,6 +33,11 @@ export function IntroSplash() {
   const dismiss = () => {
     sfx.levelUp()
     useProgress.getState().setSeenIntro(true)
+  }
+  const skipToPlay = () => {
+    sfx.click()
+    useProgress.getState().setSeenIntro(true)
+    enterPlayMode() // straight to full-poker free play (/play)
   }
   const current = getLocale()
 
@@ -85,6 +91,14 @@ export function IntroSplash() {
         <button className="btn-play splash-cta" onClick={dismiss}>
           {L.intro.cta}
         </button>
+
+        <div className="splash-skip">
+          <span className="splash-skip-q">{L.intro.skipPrompt}</span>
+          <button className="splash-skip-btn" onClick={skipToPlay}>
+            {L.intro.skipCta}
+          </button>
+        </div>
+
         <div className="splash-foot">{L.intro.foot}</div>
       </motion.div>
     </motion.div>

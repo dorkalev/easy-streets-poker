@@ -23,6 +23,8 @@ export const en = {
     body: "No rules to memorize, no deep end. You start with ONE card — higher wins — and climb one tiny new rule at a time, all the way up to full No-Limit Hold'em. By the end you know the whole game and barely noticed you learned it.",
     steps: ['1 card', 'a pair', 'the board', 'betting', 'the real game'],
     cta: 'Start from the very bottom',
+    skipPrompt: 'Already know poker?',
+    skipCta: 'Skip the lessons — just play →',
     foot: '18 bite-size levels · 6 rival characters · free · no sign-up',
     reopenTip: 'How Easy Streets works',
   },
