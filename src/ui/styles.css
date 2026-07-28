@@ -1450,6 +1450,31 @@ button {
   background: repeating-linear-gradient(90deg, var(--brass) 0 24px, var(--red-suit) 24px 48px);
 }
 
+.splash-langs {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.splash-lang {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 800;
+  color: #6e6653;
+  background: transparent;
+  border: 1px solid rgba(110, 102, 83, 0.3);
+  border-radius: 999px;
+  padding: 6px 15px;
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
+}
+.splash-lang:hover { color: var(--ink); border-color: var(--brass); }
+.splash-lang.active {
+  color: var(--ink);
+  background: linear-gradient(180deg, var(--brass-bright), var(--brass));
+  border-color: var(--brass);
+}
+
 .splash-kicker {
   display: inline-block;
   font-size: 12px;

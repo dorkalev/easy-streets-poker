@@ -974,6 +974,16 @@ function endLevel(outcome: 'won' | 'lost'): void {
   })
   if (outcome === 'won') {
     track('level_passed', { level: level.levelNumber, duration_sec: durationSec })
+  } else {
+    // Where people struggle: which level they failed, how long they fought it,
+    // and how many rookie-insurance rebuys it took before giving up.
+    track('level_failed', {
+      level: level.levelNumber,
+      level_title: level.title,
+      duration_sec: durationSec,
+      hands_played: orc.handsPlayed,
+      rebuys: orc.rebuys,
+    })
   }
   setUserProps({ levels_passed: levelsPassed, highest_level: highestLevel })
   wait(900, () =>

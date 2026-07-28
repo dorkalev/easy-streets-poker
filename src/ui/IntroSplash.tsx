@@ -1,7 +1,13 @@
 import { motion } from 'motion/react'
 import { useProgress } from '../app/progress'
-import { L } from '../i18n'
+import { L, getLocale, setLocale, type Locale } from '../i18n'
 import { sfx } from '../app/sfx'
+
+const LANGS: { code: Locale; label: string }[] = [
+  { code: 'en', label: 'English' },
+  { code: 'he', label: 'עברית' },
+  { code: 'ar', label: 'العربية' },
+]
 
 // The climb, shown as a rising staircase of poker stages. Uses mini card
 // glyphs and emoji — self-contained, no engine coupling.
@@ -27,6 +33,7 @@ export function IntroSplash() {
     sfx.levelUp()
     useProgress.getState().setSeenIntro(true)
   }
+  const current = getLocale()
 
   return (
     <motion.div
@@ -42,6 +49,17 @@ export function IntroSplash() {
         animate={{ scale: 1, y: 0, opacity: 1 }}
         transition={{ type: 'spring', stiffness: 260, damping: 24 }}
       >
+        <div className="splash-langs">
+          {LANGS.map((lng) => (
+            <button
+              key={lng.code}
+              className={`splash-lang ${lng.code === current ? 'active' : ''}`}
+              onClick={() => lng.code !== current && setLocale(lng.code)}
+            >
+              {lng.label}
+            </button>
+          ))}
+        </div>
         <div className="splash-kicker">{L.intro.kicker}</div>
         <h1 className="splash-title">
           {L.brand.tableLogo}
