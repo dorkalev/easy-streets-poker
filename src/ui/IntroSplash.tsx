@@ -10,18 +10,14 @@ const LANGS: { code: Locale; label: string }[] = [
   { code: 'ar', label: 'العربية' },
 ]
 
-// The climb, shown as a rising staircase of poker stages. Uses mini card
-// glyphs and emoji — self-contained, no engine coupling.
-interface Stage {
-  cards?: string[]
-  emoji?: string
-}
-const STAGES: Stage[] = [
-  { cards: ['A♠'] },
-  { cards: ['9♥', '9♦'] },
-  { cards: ['K♣', '7♦', '2♠'] },
-  { emoji: '🪙' },
-  { emoji: '🏆' },
+// The climb, shown purely in cards: a lone high card growing hand-by-hand up
+// to a royal flush. No emoji, no labels — just the ascent.
+const HANDS: string[][] = [
+  ['A♠'],
+  ['9♥', '9♦'],
+  ['Q♠', 'Q♥', 'Q♦'],
+  ['J♠', 'J♥', 'J♦', 'J♣'],
+  ['10♠', 'J♠', 'Q♠', 'K♠', 'A♠'],
 ]
 
 function MiniCard({ label }: { label: string }) {
@@ -72,16 +68,12 @@ export function IntroSplash() {
         </h1>
         <div className="splash-headline">{L.intro.title}</div>
 
-        <div className="splash-stairs" role="img" aria-label={L.intro.steps.join(' → ')}>
-          {STAGES.map((s, i) => (
-            <div key={i} className="stair" style={{ ['--i' as string]: i }}>
-              <div className="stair-scene">
-                {s.cards
-                  ? s.cards.map((c, j) => <MiniCard key={j} label={c} />)
-                  : <span className="stair-emoji">{s.emoji}</span>}
-              </div>
-              <div className="stair-label">{L.intro.steps[i]}</div>
-              {i < STAGES.length - 1 && <span className="stair-arrow">→</span>}
+        <div className="splash-climb" role="img" aria-label={L.intro.steps.join(' → ')}>
+          {HANDS.map((cards, i) => (
+            <div key={i} className="climb-hand" style={{ ['--i' as string]: i }}>
+              {cards.map((c, j) => (
+                <MiniCard key={j} label={c} />
+              ))}
             </div>
           ))}
         </div>
